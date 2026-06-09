@@ -1127,7 +1127,7 @@
     <!-- LANDING PAGE -->
     <div id="landingPage" class="landing-page">
         <div class="landing-logo">🏦</div>
-        <h1 class="landing-title" id="landingTitle">Financial Analyzer Lite</h1>
+        <h1 class="landing-title" id="landingTitle">Financial Analyzer</h1>
         <p class="landing-subtitle" id="landingSubtitle">Nền tảng phân tích tài chính doanh nghiệp tiện lợi. Đánh giá
             rủi ro, so sánh ngân hàng, tối ưu dòng tiền và nhận tư vấn thông minh — tất cả trong một giao diện.</p>
         <div class="landing-features">
@@ -1158,7 +1158,7 @@
 
     <!-- NAVIGATION BAR -->
     <div id="navBar" class="nav-bar">
-        <div class="nav-logo">🏦 Financial Analyzer Lite</div>
+        <div class="nav-logo">🏦 Financial Analyzer</div>
         <div class="nav-actions">
             <button class="nav-btn btn-pdf-export" onclick="App.exportPDFReport()"><i class="fas fa-file-pdf"></i> <span
                     data-translate="exportPdf">Xuất PDF</span></button>
@@ -2568,7 +2568,7 @@
                 let benchmarks = {
                     cr: { min: 1.5, max: 2.5, desc: "1.5 - 2.5 (Thanh khoản chuẩn)" },
                     de: { min: 0.5, max: 1.5, desc: "0.5 - 1.5 (Tối ưu đòn bẩy)" },
-                    icr: { min: 2.0, desc: "> 2.0 (Khả năng trả lãi - Basel III)" },
+                    icr: { min: 2.0, desc: "> 2.0 (Khả năng trả lãi)" },
                     pm: { min: 5.0, desc: "> 5.0% (Biên sinh lời ròng)" },
                     at: { min: 1.0, desc: "> 1.0 lần (Hiệu suất tài sản)" },
                     roa: { min: 6.0, desc: "> 6.0% (Sinh lời trên tài sản)" },
@@ -2615,7 +2615,7 @@
                 else if (icr >= 1.5) icrScore = 6;
                 else icrScore = 0;
                 score += icrScore;
-                details.push({ name: 'Khả năng trả lãi (ICR)', val: icr > 999 ? '∞' : icr.toFixed(1), benchmark: benchmarks.icr.desc, status: icrScore >= 10 ? '🟢 Tốt' : (icrScore >= 6 ? '🟡 Cảnh báo' : '🔴 Rủi ro'), citation: 'Basel III' });
+                details.push({ name: 'Khả năng trả lãi (ICR)', val: icr > 999 ? '∞' : icr.toFixed(1), benchmark: benchmarks.icr.desc, status: icrScore >= 10 ? '🟢 Tốt' : (icrScore >= 6 ? '🟡 Cảnh báo' : '🔴 Rủi ro'),  citation: ''});
 
                 // 4. Net Margin (trọng số 15%)
                 let pmScore = 0;
@@ -2655,7 +2655,7 @@
                 else if (dscr >= 1.0) dscrScore = 6;
                 else dscrScore = 0;
                 score += dscrScore;
-                details.push({ name: 'Khả năng trả nợ (DSCR)', val: dscr > 999 ? 'N/A' : dscr.toFixed(2), benchmark: benchmarks.dscr.desc, status: dscrScore >= 10 ? '🟢 Tốt' : (dscrScore >= 6 ? '🟡 Cảnh báo' : '🔴 Rủi ro'), citation: 'TT 11/2021/TT-NHNN' });
+                details.push({ name: 'Khả năng trả nợ (DSCR)', val: dscr > 999 ? 'N/A' : dscr.toFixed(2), benchmark: benchmarks.dscr.desc, status: dscrScore >= 10 ? '🟢 Tốt' : (dscrScore >= 6 ? '🟡 Cảnh báo' : '🔴 Rủi ro'),  citation: ''});
 
                 // Cảnh báo và Điểm mạnh
                 let warnings = [];
@@ -2723,7 +2723,7 @@
                         </tbody>
                     </table>
                     <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 8px; font-style: italic; text-align: right;">
-                        * Nguồn tham chiếu: Chuẩn mực Kế toán VN (VAS), Hiệp ước Basel III & Thông tư 11/2021/TT-NHNN của Ngân hàng Nhà nước VN.
+                        * Nguồn tham chiếu: Chuẩn mực Kế toán VN (VAS).
                     </div>
                 `;
 
@@ -4132,7 +4132,7 @@
 
                     doc.setFont('Roboto', 'normal');
                     doc.setFontSize(10);
-                    doc.text(isVi ? 'Phân tích tự động bởi Financial Analyzer Lite' : 'Powered by Financial Analyzer Lite', 15, 30);
+                    doc.text(isVi ? 'Phân tích tự động bởi Financial Analyzer' : 'Powered by Financial Analyzer', 15, 30);
                     const dateStr = new Date().toLocaleDateString(isVi ? 'vi-VN' : 'en-US');
                     doc.text(`${isVi ? 'Ngày lập' : 'Date'}: ${dateStr}`, 160, 30);
 
@@ -4407,7 +4407,7 @@
             },
 
             initApp() {
-                console.log('✅ Initializing Financial Analyzer Lite...');
+                console.log('✅ Initializing Financial Analyzer...');
                 if (this.isDark) document.body.classList.add('dark');
                 document.getElementById('langLabel').textContent = this.currentLang === 'vi' ? 'Tiếng Việt' : 'English';
                 document.getElementById('themeLabel').textContent = this.currentLang === 'vi' ? (this.isDark ? 'Sáng' : 'Tối') : (this.isDark ? 'Light' : 'Dark');
@@ -4438,7 +4438,7 @@
                 this.fullRiskAssessment();
                 this.updateFinancialStatus();
                 this.quickRiskAssessment();
-                console.log('✅ Financial Analyzer Lite Ready.');
+                console.log('✅ Financial Analyzer Ready.');
             }
         };
 
