@@ -22,6 +22,7 @@ Financial Analyzer là nền tảng phân tích tài chính doanh nghiệp dành
 
 **Sản phẩm giải quyết vấn đề gì?**  
 Các doanh nghiệp SME tại Việt Nam gặp khó trong việc tự đánh giá sức khỏe tài chính, so sánh các gói vay ngân hàng, và ra quyết định vay do thông tin về các gói vay thường không tập trung và khó tìm kiếm.
+
 **Ai đang gặp vấn đề này?**  
 Chủ doanh nghiệp vừa và nhỏ, các chuyên viên tài chính tại các SME chưa có công cụ phân tích chuyên nghiệp.
 
