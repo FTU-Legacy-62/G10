@@ -4,9 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=4.0">
-    <title>🏦 Financial Analyzer | Enterprise Financial Intelligence Platform</title>
+    <title>🏦 Financial Analyzer | Nền tảng Phân tích Tài chính Doanh nghiệp</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF + AutoTable for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <!-- PDF.js for PDF Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
@@ -39,13 +44,11 @@
             --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--bg);
@@ -55,13 +58,11 @@
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
         }
-
         .app-container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 20px;
         }
-
         .landing-page {
             min-height: 100vh;
             display: flex;
@@ -73,7 +74,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .landing-page::before {
             content: '';
             position: absolute;
@@ -85,7 +85,6 @@
             animation: bgFloat 20s ease-in-out infinite;
             z-index: -1;
         }
-
         @keyframes bgFloat {
 
             0%,
@@ -101,7 +100,6 @@
                 transform: translate(-20px, 20px)
             }
         }
-
         .landing-logo {
             width: 100px;
             height: 100px;
@@ -965,6 +963,162 @@
         canvas {
             max-height: 350px
         }
+
+        /* UPLOAD ZONE STYLE */
+        .upload-zone {
+            border: 2px dashed var(--primary);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            background: rgba(37, 99, 235, 0.03);
+            margin: 16px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-zone:hover {
+            background: rgba(37, 99, 235, 0.08);
+            border-color: var(--secondary);
+        }
+
+        .upload-zone i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .upload-zone-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .upload-zone-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-pdf-export {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: white !important;
+            border: none !important;
+        }
+
+        .btn-pdf-export:hover {
+            background: linear-gradient(135deg, #f87171, #dc2626);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* DUPONT STYLES */
+        .dupont-container {
+            padding: 20px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 15px;
+        }
+
+        .dupont-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dupont-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .dupont-node:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .roe-node {
+            border-left: 6px solid var(--secondary);
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, var(--bg-card) 100%);
+        }
+
+        .pm-node {
+            border-left: 6px solid var(--success);
+        }
+
+        .at-node {
+            border-left: 6px solid var(--primary);
+        }
+
+        .em-node {
+            border-left: 6px solid var(--warning);
+        }
+
+        .dupont-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dupont-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 6px 0;
+            color: var(--text);
+        }
+
+        .dupont-formula {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .dupont-operator {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+        }
+
+        #quickRiskResult table,
+        #quickRiskResult .table,
+        #quickRiskResult td,
+        #quickRiskResult th {
+            color: white !important;
+        }
+
+        #quickRiskResult * {
+            color: white !important;
+            -webkit-text-fill-color: white !important;
+        }
+
+        #dupontCard .dupont-container * {
+            color: #0f172a !important;
+        }
+
+        #dupontCard .dupont-container {
+            background: #f8fafc !important;
+        }
+
+        body.dark #dupontCard .dupont-container * {
+            color: #f1f5f9 !important;
+        }
+
+        body.dark #dupontCard .dupont-container {
+            background: #1e293b !important;
+        }
+
+        #quickRiskResult>div>div>div {
+            color: white !important;
+        }
     </style>
 </head>
 
@@ -973,9 +1127,9 @@
     <!-- LANDING PAGE -->
     <div id="landingPage" class="landing-page">
         <div class="landing-logo">🏦</div>
-        <h1 class="landing-title" id="landingTitle">Financial Analyzer Pro</h1>
-        <p class="landing-subtitle" id="landingSubtitle">Enterprise-grade financial intelligence platform. Analyze
-            risks, compare banks, optimize cash flow, and get AI-powered insights — all in one place.</p>
+        <h1 class="landing-title" id="landingTitle">Financial Analyzer Lite</h1>
+        <p class="landing-subtitle" id="landingSubtitle">Nền tảng phân tích tài chính doanh nghiệp tiện lợi. Đánh giá
+            rủi ro, so sánh ngân hàng, tối ưu dòng tiền và nhận tư vấn thông minh — tất cả trong một giao diện.</p>
         <div class="landing-features">
             <div class="landing-feature">
                 <div class="feature-icon icon-blue">📊</div>
@@ -1004,8 +1158,10 @@
 
     <!-- NAVIGATION BAR -->
     <div id="navBar" class="nav-bar">
-        <div class="nav-logo">🏦 Financial Analyzer Pro</div>
+        <div class="nav-logo">🏦 Financial Analyzer Lite</div>
         <div class="nav-actions">
+            <button class="nav-btn btn-pdf-export" onclick="App.exportPDFReport()"><i class="fas fa-file-pdf"></i> <span
+                    data-translate="exportPdf">Xuất PDF</span></button>
             <button class="nav-btn" onclick="App.toggleLanguage()"><i class="fas fa-globe"></i> <span
                     id="langLabel">Tiếng Việt</span></button>
             <button class="nav-btn" onclick="App.toggleTheme()"><i class="fas fa-moon"></i> <span
@@ -1031,6 +1187,42 @@
 
         <!-- ==================== TAB 1: RISK ASSESSMENT ==================== -->
         <div id="tab1" class="tab-content active">
+            <!-- BCTC File Upload Card -->
+            <div class="card upload-card" style="margin-bottom: 24px;">
+                <h2 style="margin-bottom:12px;"><i class="fas fa-file-invoice-dollar" style="color:var(--primary);"></i>
+                    <span data-translate="uploadBCTCTitle">Tự động nhập từ Báo cáo tài chính (BCTC)</span>
+                </h2>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">
+                    Hỗ trợ tải lên file PDF (BCTC tiếng Việt của các SME với các định dạng khác nhau), file Excel
+                    (.xlsx), hoặc file văn bản (.txt). Hệ thống sử dụng AI để tự động đọc, trích xuất dữ liệu tài chính
+                    điền vào form bên dưới và thực hiện phân tích DuPont.
+                </p>
+                <div class="upload-zone" id="bctcUploadZone" onclick="document.getElementById('bctcFileInput').click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <div class="upload-zone-title" id="uploadZoneTitle">Kéo thả file BCTC vào đây hoặc click để chọn
+                        file</div>
+                    <div class="upload-zone-desc" id="uploadZoneDesc">Hỗ trợ PDF tiếng Việt, Excel (.xlsx), Text (.txt)
+                    </div>
+                    <input type="file" id="bctcFileInput" accept=".pdf,.xlsx,.txt" style="display:none;"
+                        onchange="App.handleBCTCUpload(event)">
+                </div>
+                <!-- Progress/Status indicator -->
+                <div id="uploadStatusContainer"
+                    style="display:none; padding:15px; border-radius:12px; background:var(--bg); border:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="spinner-container" id="uploadSpinner">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem; color:var(--primary);"></i>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-weight:700; font-size:0.95rem;" id="uploadStatusText">Đang xử lý file...
+                            </div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);" id="uploadStatusDetail">Đang
+                                trích xuất văn bản từ file PDF...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid-4col" style="margin-bottom:20px">
                 <div class="kpi-card">
                     <div class="kpi-icon icon-blue">💰</div>
@@ -1066,44 +1258,101 @@
                     </select>
                     <div class="grid-2col" style="margin-top:12px">
                         <div><label data-translate="bizYears">📅 Năm hoạt động</label><input type="number"
-                                id="businessYears" value="5" min="0"></div>
-                        <div><label data-translate="employees">👥 Nhân viên</label><input type="number"
-                                id="employeeCount" value="50" min="1"></div>
+                                id="businessYears" value="5" min="0" oninput="App.syncData()"></div>
+                        <div><label data-translate="employees">👥 Số nhân viên</label><input type="number"
+                                id="employeeCount" value="50" min="1" oninput="App.syncData()"></div>
                     </div>
                     <label data-translate="totalAssets">📈 Tổng tài sản (VND)</label><input type="text" id="totalAssets"
                         value="10,000,000,000" oninput="App.formatNumberInput(this);App.syncData()">
-                    <label data-translate="currentAssets">🏦 Tài sản ngắn hạn</label><input type="text"
+                    <label data-translate="currentAssets">🏦 Tài sản ngắn hạn (VND)</label><input type="text"
                         id="currentAssets" value="4,000,000,000" oninput="App.formatNumberInput(this);App.syncData()">
-                    <label data-translate="fixedAssets">🏭 Tài sản cố định</label><input type="text" id="fixedAssets"
-                        value="6,000,000,000" oninput="App.formatNumberInput(this)">
-                    <label data-translate="debt">💳 Tổng nợ</label><input type="text" id="debt" value="4,000,000,000"
-                        oninput="App.formatNumberInput(this);App.syncData()">
-                </div>
-                <div class="card">
-                    <h2 data-translate="financeLoan">💰 Tài chính & Vay vốn</h2>
-                    <label data-translate="equity">💰 Vốn chủ sở hữu</label><input type="text" id="equity" readonly>
-                    <label data-translate="revenue">📊 Doanh thu năm</label><input type="text" id="annualRevenue"
-                        value="15,000,000,000" oninput="App.formatNumberInput(this);App.syncData()">
-                    <label data-translate="netProfit">📈 Lợi nhuận sau thuế</label><input type="text" id="netProfit"
-                        value="1,500,000,000" oninput="App.formatNumberInput(this);App.syncData()">
-                    <label data-translate="interestExp">💰 Chi phí lãi vay</label><input type="text"
-                        id="interestExpense" value="300,000,000" oninput="App.formatNumberInput(this)">
-                    <label data-translate="depreciation">💵 Khấu hao</label><input type="text" id="depreciation"
-                        value="500,000,000" oninput="App.formatNumberInput(this)">
-                    <label data-translate="monthlyIncome">💵 Thu nhập tháng</label><input type="text" id="monthlyIncome"
-                        value="50,000,000" oninput="App.formatNumberInput(this)">
+                    <label data-translate="fixedAssets" style="display:flex;align-items:center;gap:6px;">🏭 Tài sản cố
+                        định (VND) <span
+                            style="font-size:0.7rem;background:#dbeafe;color:#2563eb;padding:2px 8px;border-radius:20px;font-weight:600;">Tự
+                            động tính</span></label>
+                    <input type="text" id="fixedAssets" readonly placeholder="= Tổng TS - TS ngắn hạn"
+                        style="color:var(--text-secondary);">
+                    <label data-translate="debt">💳 Tổng nợ (VND)</label><input type="text" id="debt"
+                        value="4,000,000,000" oninput="App.formatNumberInput(this);App.syncData()">
+                    <label data-translate="equity">💰 Vốn chủ sở hữu (VND)</label><input type="text" id="equity"
+                        readonly>
                     <div class="grid-2col" style="margin-top:12px">
                         <div><label data-translate="loanAmount">💰 Số tiền vay</label><input type="text" id="loanAmount"
-                                value="500,000,000" oninput="App.formatNumberInput(this)"></div>
+                                value="500,000,000" oninput="App.formatNumberInput(this);App.syncData()"></div>
                         <div><label data-translate="loanTerm">📅 Thời hạn (tháng)</label><input type="number"
-                                id="loanTerm" value="120" min="1"></div>
+                                id="loanTerm" value="120" min="1" onchange="App.syncData()"></div>
                     </div>
-                    <label data-translate="collateral">📊 Tài sản đảm bảo</label><input type="text" id="collateralValue"
-                        value="700,000,000" oninput="App.formatNumberInput(this)">
+                    <label data-translate="collateral">📊 Tài sản đảm bảo (VND)</label><input type="text"
+                        id="collateralValue" value="700,000,000" oninput="App.formatNumberInput(this)">
                     <label data-translate="loanType">🏦 Hình thức vay</label><select id="loanType">
                         <option value="collateral" data-translate="typeCol">Thế chấp</option>
                         <option value="unsecured" data-translate="typeUnsec">Tín chấp</option>
                     </select>
+                </div>
+                <div class="card">
+                    <h2 data-translate="isTitle">📋 Báo cáo Kết quả HĐKD (Tháng)</h2>
+                    <p
+                        style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px;padding:10px;background:var(--bg);border-radius:12px;">
+                        💡 Nhập số liệu theo <strong>tháng</strong>. Hệ thống sẽ tự tính lợi nhuận ròng và quy đổi sang
+                        năm.
+                    </p>
+                    <label data-translate="monthlyRevenue">📊 Doanh thu tháng (VND)</label>
+                    <input type="text" id="monthlyRevenue" value="1,250,000,000"
+                        oninput="App.formatNumberInput(this);App.calcIS()" placeholder="Doanh thu thuần trong tháng">
+
+                    <label data-translate="monthlyCOGS">🏭 Chi phí giá vốn hàng bán (VND)</label>
+                    <input type="text" id="monthlyCOGS" value="700,000,000"
+                        oninput="App.formatNumberInput(this);App.calcIS()" placeholder="Giá vốn hàng bán trong tháng">
+
+                    <label data-translate="monthlyOpex">⚙️ Chi phí hoạt động (VND)</label>
+                    <input type="text" id="monthlyOpex" value="200,000,000"
+                        oninput="App.formatNumberInput(this);App.calcIS()" placeholder="Chi phí bán hàng, quản lý...">
+
+                    <label data-translate="monthlyDepreciation">🔧 Khấu hao tháng (VND)</label>
+                    <input type="text" id="monthlyDepreciation" value="41,667,000"
+                        oninput="App.formatNumberInput(this);App.calcIS()" placeholder="Khấu hao TSCĐ trong tháng">
+
+                    <div
+                        style="background:var(--bg);border-radius:14px;padding:14px;margin-top:14px;border:1px solid var(--border);">
+                        <div
+                            style="font-size:0.75rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                            📌 Tính toán tự động</div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;">
+                            <span>💰 Lãi vay tháng <span
+                                    style="font-size:0.7rem;background:#ede9fe;color:#7c3aed;padding:2px 6px;border-radius:10px;">Từ
+                                    gói vay đã chọn</span></span>
+                            <strong id="monthlyInterestDisplay">--</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;">
+                            <span>🧾 Lợi nhuận trước thuế</span>
+                            <strong id="monthlyEBTDisplay">--</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;">
+                            <span>📋 Thuế TNDN (20%)</span>
+                            <strong id="monthlyTaxDisplay">--</strong>
+                        </div>
+                        <hr style="border-color:var(--border);margin:8px 0;">
+                        <div style="display:flex;justify-content:space-between;font-size:0.95rem;">
+                            <strong>✅ Lợi nhuận ròng tháng</strong>
+                            <strong id="monthlyNetProfitDisplay" style="color:var(--success);">--</strong>
+                        </div>
+                        <div
+                            style="display:flex;justify-content:space-between;font-size:0.85rem;margin-top:6px;color:var(--text-secondary);">
+                            <span>📅 Lợi nhuận ròng năm (×12)</span>
+                            <span id="annualNetProfitDisplay">--</span>
+                        </div>
+                        <div
+                            style="display:flex;justify-content:space-between;font-size:0.85rem;margin-top:4px;color:var(--text-secondary);">
+                            <span>📈 Doanh thu năm (×12)</span>
+                            <span id="annualRevenueDisplay">--</span>
+                        </div>
+                    </div>
+                    <!-- Hidden inputs used internally by financial calculations -->
+                    <input type="hidden" id="annualRevenue" value="15000000000">
+                    <input type="hidden" id="netProfit" value="1500000000">
+                    <input type="hidden" id="interestExpense" value="300000000">
+                    <input type="hidden" id="depreciation" value="500000000">
+                    <input type="hidden" id="monthlyIncome" value="50000000">
                 </div>
             </div>
 
@@ -1177,10 +1426,6 @@
                         <div class="metric-value" id="profitMarginValue">--</div>
                         <div class="metric-label" data-translate="profitMargin">Biên LN</div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-value" id="liquidityValue2">--</div>
-                        <div class="metric-label" data-translate="liquidity">Thanh khoản</div>
-                    </div>
                 </div>
                 <button onclick="App.quickRiskAssessment()" class="btn-purple btn-block btn-lg">🔍 <span
                         data-translate="runQuickRisk">ĐÁNH GIÁ RỦI RO</span></button>
@@ -1190,35 +1435,97 @@
 
         <!-- ==================== TAB 2: NPV & IRR ==================== -->
         <div id="tab2" class="tab-content">
+            <!-- Row 1: Input + Results + Break-even -->
             <div class="grid-2col">
                 <div class="card">
-                    <h2 data-translate="npvTitle">💹 NPV & IRR</h2>
+                    <h2 data-translate="npvTitle">💹 NPV &amp; IRR</h2>
+                    <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px;">Nhập dòng tiền từng năm (VND), phân cách bằng dấu phẩy. Năm 0 là vốn đầu tư ban đầu (số âm).</p>
                     <textarea id="cashflows" rows="4">-500000000,150000000,180000000,220000000,250000000</textarea>
-                    <label data-translate="discountRate">Lãi suất chiết khấu (%/năm)</label><input type="number"
-                        id="discountRate" value="10" step="0.5">
-                    <div class="btn-group" style="margin-top:12px"><button onclick="App.calculateNpvIrr()">🧮 <span
-                                data-translate="calcNpv">Tính NPV & IRR</span></button><button
-                            onclick="App.downloadCashflowTemplate()" class="btn-success">📥 <span
-                                data-translate="downloadTpl">Tải template</span></button></div>
-                    <div class="result-box">
-                        <div><strong>NPV:</strong> <span id="npvValue">--</span></div>
-                        <div><strong>IRR:</strong> <span id="irrValue">--</span></div>
-                        <div><strong data-translate="payback">Hoàn vốn:</strong> <span id="paybackPeriod">--</span>
-                            <span data-translate="years">năm</span>
+                    <label data-translate="discountRate">Lãi suất chiết khấu (%/năm)</label>
+                    <input type="number" id="discountRate" value="10" step="0.5">
+                    <div class="btn-group" style="margin-top:12px">
+                        <button onclick="App.calculateNpvIrr()">🧮 <span data-translate="calcNpv">Tính NPV &amp; IRR</span></button>
+                        <button onclick="App.downloadCashflowTemplate()" class="btn-success">📥 <span data-translate="downloadTpl">Tải template</span></button>
+                    </div>
+                    <!-- Enhanced Result KPI Cards -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;">
+                        <div style="background:linear-gradient(135deg,rgba(37,99,235,0.1),rgba(37,99,235,0.04));border:1px solid rgba(37,99,235,0.25);border-radius:14px;padding:12px;text-align:center;">
+                            <div style="font-size:0.65rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;font-weight:700;">NPV</div>
+                            <div id="npvValue" style="font-size:1.05rem;font-weight:800;color:var(--primary);">--</div>
+                        </div>
+                        <div style="background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(16,185,129,0.04));border:1px solid rgba(16,185,129,0.25);border-radius:14px;padding:12px;text-align:center;">
+                            <div style="font-size:0.65rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;font-weight:700;">IRR</div>
+                            <div id="irrValue" style="font-size:1.05rem;font-weight:800;color:var(--success);">--</div>
+                        </div>
+                        <div style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.04));border:1px solid rgba(245,158,11,0.25);border-radius:14px;padding:12px;text-align:center;">
+                            <div style="font-size:0.65rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;font-weight:700;" data-translate="payback">Hoàn vốn</div>
+                            <div style="display:flex;align-items:baseline;justify-content:center;gap:3px;">
+                                <span id="paybackPeriod" style="font-size:1.05rem;font-weight:800;color:var(--warning);">--</span>
+                                <span style="font-size:0.7rem;color:var(--text-secondary);" data-translate="years">năm</span>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        style="margin-top:16px;padding:16px;border:2px dashed var(--border);border-radius:16px;text-align:center">
-                        <label style="margin-top:0" data-translate="uploadExcel">📂 Tải file Excel</label><input
-                            type="file" id="cashflowFile" accept=".xlsx,.xls,.csv" style="margin-top:8px"><button
-                            onclick="App.loadCashflowFromFile()" style="margin-top:8px">📎 <span
-                                data-translate="readFile">Đọc file</span></button>
+                    <div style="margin-top:16px;padding:16px;border:2px dashed var(--border);border-radius:16px;text-align:center;">
+                        <label style="margin-top:0" data-translate="uploadExcel">📂 Tải file Excel</label>
+                        <input type="file" id="cashflowFile" accept=".xlsx,.xls,.csv" style="margin-top:8px">
+                        <button onclick="App.loadCashflowFromFile()" style="margin-top:8px">📎 <span data-translate="readFile">Đọc file</span></button>
                     </div>
                 </div>
                 <div class="card">
-                    <h2 data-translate="aiInsight">💡 AI Insight</h2>
-                    <div id="investmentInsight" class="insight-box"><span data-translate="calcPrompt">Tính NPV/IRR để
-                            nhận phân tích</span></div>
+                    <h2 data-translate="aiInsight">💡 AI Insight &amp; Đánh giá</h2>
+                    <div id="investmentInsight" class="insight-box"><span data-translate="calcPrompt">Tính NPV/IRR để nhận phân tích</span></div>
+                    <!-- Break-even Box -->
+                    <div id="breakevenBox" style="display:none;margin-top:14px;padding:14px;background:var(--bg);border-radius:14px;border:1px solid var(--border);">
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">⚖️ Phân tích điểm hòa vốn</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div style="font-size:0.82rem;">
+                                <div style="color:var(--text-secondary);margin-bottom:2px;">💸 Tổng đầu tư ban đầu</div>
+                                <strong id="breakevenInitial">--</strong>
+                            </div>
+                            <div style="font-size:0.82rem;">
+                                <div style="color:var(--text-secondary);margin-bottom:2px;">💰 Tổng dòng tiền dương</div>
+                                <strong id="breakevenInflows">--</strong>
+                            </div>
+                            <div style="font-size:0.82rem;">
+                                <div style="color:var(--text-secondary);margin-bottom:2px;">📈 Lợi nhuận ròng dự án</div>
+                                <strong id="breakevenNetProfit" style="color:var(--success);">--</strong>
+                            </div>
+                            <div style="font-size:0.82rem;">
+                                <div style="color:var(--text-secondary);margin-bottom:2px;">🎯 ROI đơn giản</div>
+                                <strong id="breakevenROI" style="color:var(--secondary);">--</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Cashflow Chart -->
+            <div class="card" style="margin-top:20px;">
+                <h3>📊 Biểu đồ Dòng tiền theo năm (Cashflow Waterfall)</h3>
+                <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Trực quan hóa dòng tiền vào/ra và số dư tích lũy (Cumulative Cashflow) từng năm của dự án.</p>
+                <div id="cashflowChartWrapper" style="position:relative;height:280px;display:none;">
+                    <canvas id="cashflowChart"></canvas>
+                </div>
+                <div id="cashflowChartEmpty" style="text-align:center;padding:40px;color:var(--text-secondary);font-size:0.9rem;">
+                    📉 Nhập dòng tiền và bấm "Tính NPV &amp; IRR" để xem biểu đồ
+                </div>
+            </div>
+
+            <!-- Row 3: Sensitivity Analysis -->
+            <div class="card" style="margin-top:20px;">
+                <h3>🎯 Phân tích độ nhạy – NPV theo lãi suất chiết khấu</h3>
+                <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">NPV thay đổi như thế nào khi lãi suất chiết khấu biến động từ 2% đến 30%? Ô màu đỏ = NPV âm (dự án lỗ), xanh lá = NPV dương (có lời).</p>
+                <div id="sensitivityTable">
+                    <div style="text-align:center;padding:30px;color:var(--text-secondary);font-size:0.85rem;">📊 Tính NPV &amp; IRR để xem bảng phân tích độ nhạy</div>
+                </div>
+            </div>
+
+            <!-- Row 4: Scenario Analysis -->
+            <div class="card" style="margin-top:20px;">
+                <h3>🔮 Phân tích Kịch bản (Scenario Analysis)</h3>
+                <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:14px;">Mô phỏng NPV và IRR ở 3 kịch bản: Bi quan (−20% dòng tiền), Cơ sở (gốc) và Lạc quan (+20% dòng tiền).</p>
+                <div id="scenarioAnalysis">
+                    <div style="text-align:center;padding:30px;color:var(--text-secondary);font-size:0.85rem;">🔮 Tính NPV &amp; IRR để xem phân tích kịch bản</div>
                 </div>
             </div>
         </div>
@@ -1439,6 +1746,54 @@
                     <p><span data-translate="clickAnalyze">Nhấn "Phân tích toàn diện" để xem</span></p>
                 </div>
             </div>
+
+            <!-- DUPONT ANALYSIS CARD -->
+            <div class="card" id="dupontCard" style="margin-top:20px;">
+                <h3>📊 Phân tích DuPont (DuPont Decomposition)</h3>
+                <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:15px;">
+                    Mô hình DuPont phân rã Tỷ suất sinh lời trên Vốn chủ sở hữu (ROE) thành 3 nhân tố chính: Biên lợi
+                    nhuận ròng, Vòng quay tổng tài sản và Hệ số nhân vốn chủ sở hữu (Đòn bẩy tài chính).
+                </p>
+                <div class="dupont-container">
+                    <div class="dupont-tree">
+                        <!-- ROE Box -->
+                        <div class="dupont-node roe-node">
+                            <div class="dupont-label">ROE (Return on Equity)</div>
+                            <div class="dupont-val" id="dupontROE">--%</div>
+                            <div class="dupont-formula">Tỷ suất sinh lời trên Vốn CSH</div>
+                        </div>
+
+                        <div class="dupont-operator">=</div>
+
+                        <div class="grid-3col" style="width: 100%; display: grid; gap: 15px; margin-top: 10px;">
+                            <!-- NPM Box -->
+                            <div class="dupont-node pm-node">
+                                <div class="dupont-label">Biên Lợi Nhuận Ròng (NPM)</div>
+                                <div class="dupont-val" id="dupontPM">--%</div>
+                                <div class="dupont-formula">Lợi nhuận ròng / Doanh thu</div>
+                            </div>
+
+                            <!-- ATO Box -->
+                            <div class="dupont-node at-node">
+                                <div class="dupont-label">Vòng Quay Tổng Tài Sản (ATO)</div>
+                                <div class="dupont-val" id="dupontAT">--</div>
+                                <div class="dupont-formula">Doanh thu / Tổng tài sản</div>
+                            </div>
+
+                            <!-- EM Box -->
+                            <div class="dupont-node em-node">
+                                <div class="dupont-label">Hệ Số Nhân Vốn CSH (EM)</div>
+                                <div class="dupont-val" id="dupontEM">--</div>
+                                <div class="dupont-formula">Tổng tài sản / Vốn CSH</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dupontExplanation" class="insight-box"
+                        style="margin-top:15px; background:rgba(37, 99, 235, 0.05);">
+                        Nhấn "Phân tích toàn diện" ở trên để xem phân tích DuPont chi tiết.
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ==================== TAB 7: AI CONSULTANT ==================== -->
@@ -1511,11 +1866,13 @@
                 { id: 1, name: "Vietcombank", packageName: "Business Loan", interestRate: 4.6, processingFee: 0.5, maxTerm: 12, minLoan: 5e7, maxLoan: 3e10, maxLTV: 100, minIncome: 8e6, pros: "Low rate 4.6%/yr", cons: "Short term only", requirements: "Business plan", loanTypes: ["collateral"], source: "VCB" },
                 { id: 2, name: "BIDV", packageName: "Working Capital", interestRate: 7.0, processingFee: 0.3, maxTerm: 12, minLoan: 3e7, maxLoan: 1e10, maxLTV: 100, minIncome: 7e6, pros: "Fast disbursement", cons: "Floating rate", requirements: "Business docs", loanTypes: ["collateral"], source: "BIDV" },
                 { id: 3, name: "Techcombank", packageName: "SME Loan", interestRate: 5.99, processingFee: 0.8, maxTerm: 120, minLoan: 1e8, maxLoan: 8e9, maxLTV: 80, minIncome: 1e7, pros: "Preferential rate", cons: "High processing fee", requirements: "2Y financials", loanTypes: ["collateral"], source: "TCB" },
-                { id: 4, name: "VPBank", packageName: "Business Loan", interestRate: 6.9, processingFee: 0.6, maxTerm: 120, minLoan: 5e7, maxLoan: 6e9, maxLTV: 75, minIncome: 8e6, pros: "Quick process", cons: "Processing fee", requirements: "Profitable ops", loanTypes: ["collateral"], source: "VPB" }
+                { id: 4, name: "VPBank", packageName: "Business Loan", interestRate: 6.9, processingFee: 0.6, maxTerm: 120, minLoan: 5e7, maxLoan: 6e9, maxLTV: 75, minIncome: 8e6, pros: "Quick process", cons: "Processing fee", requirements: "Profitable ops", loanTypes: ["collateral"], source: "VPB" },
+                { id: 5, name: "VPBank", packageName: "Cho vay bổ sung vốn lưu động siêu nhanh", interestRate: 7.5, processingFee: 0.5, maxTerm: 12, minLoan: 1e8, maxLoan: 3e9, maxLTV: 80, minIncome: 8e6, pros: "Phê duyệt nhanh trong 5 giờ", cons: "Kỳ hạn ngắn hạn", requirements: "Có dòng tiền qua tài khoản tốt", loanTypes: ["collateral"], source: "VPBank" },
+                { id: 6, name: "Sacombank", packageName: "Thấu chi tài khoản doanh nghiệp", interestRate: 8.5, processingFee: 0.4, maxTerm: 12, minLoan: 5e7, maxLoan: 2e9, maxLTV: 75, minIncome: 8e6, pros: "Rút vốn nhanh chóng không cần làm hồ sơ giải ngân nhiều lần", cons: "Lãi suất cao hơn vay thế chấp thông thường", requirements: "Có doanh thu qua tài khoản Sacombank", loanTypes: ["collateral"], source: "Sacombank" }
             ]),
             translations: {
-                vi: { tabRisk: "Đánh giá rủi ro", tabNpv: "NPV & IRR", tabCompare: "So sánh ngân hàng", tabDashboard: "Dashboard", tabDeepRisk: "Rủi ro chuyên sâu", tabAi: "AI Tư vấn", kpiAssets: "Tổng tài sản", kpiRevenue: "Doanh thu", kpiProfit: "Lợi nhuận", kpiDE: "Tỷ lệ D/E", companyInfo: "📊 Thông tin doanh nghiệp", companyName: "🏢 Tên doanh nghiệp", industry: "🏭 Ngành", indMan: "Sản xuất", indTrade: "Thương mại", indSvc: "Dịch vụ", indTech: "Công nghệ", bizYears: "📅 Năm hoạt động", employees: "👥 Nhân viên", totalAssets: "📈 Tổng tài sản (VND)", currentAssets: "🏦 Tài sản ngắn hạn", fixedAssets: "🏭 Tài sản cố định", debt: "💳 Tổng nợ", financeLoan: "💰 Tài chính & Vay vốn", equity: "💰 Vốn chủ sở hữu", revenue: "📊 Doanh thu năm", netProfit: "📈 Lợi nhuận sau thuế", interestExp: "💰 Chi phí lãi vay", depreciation: "💵 Khấu hao", monthlyIncome: "💵 Thu nhập tháng", loanAmount: "💰 Số tiền vay", loanTerm: "📅 Thời hạn (tháng)", collateral: "📊 Tài sản đảm bảo", loanType: "🏦 Hình thức vay", typeCol: "Thế chấp", typeUnsec: "Tín chấp", macroTitle: "KINH TẾ VĨ MÔ", updateMacro: "Cập nhật tự động", manualMacro: "Nhập thủ công", gdp: "Tăng trưởng GDP", inflation: "Lạm phát", policyRate: "Lãi suất điều hành", exchange: "Tỷ giá USD/VND", applyMacro: "Áp dụng", quickRiskTitle: "📊 ĐÁNH GIÁ RỦI RO NHANH", profitMargin: "Biên LN", liquidity: "Thanh khoản", runQuickRisk: "ĐÁNH GIÁ RỦI RO NHANH", npvTitle: "💹 NPV & IRR", discountRate: "Lãi suất chiết khấu (%/năm)", calcNpv: "Tính NPV & IRR", downloadTpl: "Tải template", payback: "Hoàn vốn:", years: "năm", uploadExcel: "📂 Tải file Excel", readFile: "Đọc file", aiInsight: "💡 AI Insight", calcPrompt: "Tính NPV/IRR để nhận phân tích", bankCompare: "🏦 So sánh ngân hàng", finHealth: "SỨC KHỎE TÀI CHÍNH", companyValue: "GIÁ TRỊ DOANH NGHIỆP", creditRating: "XẾP HẠNG TÍN DỤNG", assetStruct: "📊 Cơ cấu tài sản", capitalStruct: "💵 Cơ cấu nguồn vốn", profitTrend: "📈 Xu hướng lợi nhuận", cashFlowChart: "💰 Dòng tiền", repaySchedule: "📅 Lịch trả nợ", interestRate: "Lãi suất (%/năm)", finRatios: "📊 Chỉ số tài chính", currentRatio: "Thanh toán HH", assetTurnover: "Vòng quay TS", deepRiskTitle: "🔍 Đánh giá rủi ro chuyên sâu", runDeepRisk: "PHÂN TÍCH TOÀN DIỆN", riskScore: "📊 Điểm rủi ro", outOf: "/100", radarTitle: "📊 Biểu đồ Radar", warnings: "⚠️ Cảnh báo sớm", recommendations: "✅ Khuyến nghị", overallAssess: "Đánh giá tổng hợp", clickAnalyze: 'Nhấn "Phân tích toàn diện" để xem', finStatus: "📊 Tình hình tài chính", refresh: "Cập nhật", strategyTitle: "🎯 Tư vấn chiến lược", goal: "Mục tiêu", goalGrowth: "📈 Tăng trưởng", goalProfit: "💰 Tối đa lợi nhuận", goalDebt: "📉 Giảm nợ", goalCash: "💵 Dòng tiền", timeframe: "Thời gian (tháng)", budget: "Ngân sách (VND)", getAdvice: "Nhận tư vấn", chatTitle: "Trò chuyện với AI", chatWelcome: "Xin chào! Tôi là AI Consultant. Hãy hỏi tôi về rủi ro, dòng tiền, vay vốn, hoặc lợi nhuận!", btnRisk: "Rủi ro", btnCashflow: "Dòng tiền", btnLoan: "Vay vốn", btnProfit: "Lợi nhuận", chatPlaceholder: "Nhập câu hỏi...", send: "Gửi", landingTitle: "Financial Analyzer Pro", landingSubtitle: "Nền tảng phân tích tài chính doanh nghiệp toàn diện. Phân tích rủi ro, so sánh ngân hàng, tối ưu dòng tiền và nhận tư vấn AI.", feat1Title: "Đánh giá rủi ro", feat1Desc: "Phân tích rủi ro đa chiều với 7 nhóm chỉ số và chấm điểm thời gian thực", feat2Title: "So sánh ngân hàng", feat2Desc: "So sánh các gói vay từ nhiều ngân hàng với điểm phù hợp thông minh", feat3Title: "AI Tư vấn", feat3Desc: "Trợ lý tài chính thông minh 24/7 dựa trên dữ liệu thực tế của bạn", feat4Title: "NPV & IRR", feat4Desc: "Phân tích đầu tư nâng cao với nhập Excel và tính toán hoàn vốn", launchBtn: "Khởi chạy ứng dụng" },
-                en: { tabRisk: "Risk Assessment", tabNpv: "NPV & IRR", tabCompare: "Bank Compare", tabDashboard: "Dashboard", tabDeepRisk: "Deep Risk", tabAi: "AI Consultant", kpiAssets: "Total Assets", kpiRevenue: "Revenue", kpiProfit: "Net Profit", kpiDE: "D/E Ratio", companyInfo: "📊 Company Info", companyName: "🏢 Company Name", industry: "🏭 Industry", indMan: "Manufacturing", indTrade: "Trading", indSvc: "Services", indTech: "Technology", bizYears: "📅 Years in Business", employees: "👥 Employees", totalAssets: "📈 Total Assets (VND)", currentAssets: "🏦 Current Assets", fixedAssets: "🏭 Fixed Assets", debt: "💳 Total Debt", financeLoan: "💰 Finance & Loan", equity: "💰 Equity", revenue: "📊 Annual Revenue", netProfit: "📈 Net Profit", interestExp: "💰 Interest Expense", depreciation: "💵 Depreciation", monthlyIncome: "💵 Monthly Income", loanAmount: "💰 Loan Amount", loanTerm: "📅 Loan Term (mo)", collateral: "📊 Collateral Value", loanType: "🏦 Loan Type", typeCol: "Collateral", typeUnsec: "Unsecured", macroTitle: "MACRO ECONOMY", updateMacro: "Auto Update", manualMacro: "Manual Input", gdp: "GDP Growth", inflation: "Inflation", policyRate: "Policy Rate", exchange: "USD/VND Rate", applyMacro: "Apply", quickRiskTitle: "📊 QUICK RISK ASSESSMENT", profitMargin: "Profit Margin", liquidity: "Liquidity", runQuickRisk: "RUN ASSESSMENT", npvTitle: "💹 NPV & IRR", discountRate: "Discount Rate (%/yr)", calcNpv: "Calculate NPV & IRR", downloadTpl: "Download Template", payback: "Payback:", years: "years", uploadExcel: "📂 Upload Excel", readFile: "Read File", aiInsight: "💡 AI Insight", calcPrompt: "Calculate NPV/IRR for analysis", bankCompare: "🏦 Bank Comparison", finHealth: "FINANCIAL HEALTH", companyValue: "COMPANY VALUE", creditRating: "CREDIT RATING", assetStruct: "📊 Asset Structure", capitalStruct: "💵 Capital Structure", profitTrend: "📈 Profit Trend", cashFlowChart: "💰 Cash Flow", repaySchedule: "📅 Repayment Schedule", interestRate: "Interest Rate (%/yr)", finRatios: "📊 Financial Ratios", currentRatio: "Current Ratio", assetTurnover: "Asset Turnover", deepRiskTitle: "🔍 Deep Risk Assessment", runDeepRisk: "RUN COMPREHENSIVE ANALYSIS", riskScore: "📊 Risk Score", outOf: "/100", radarTitle: "📊 Radar Chart", warnings: "⚠️ Early Warnings", recommendations: "✅ Recommendations", overallAssess: "Overall Assessment", clickAnalyze: 'Click "Run Comprehensive Analysis" to see results', finStatus: "📊 Financial Status", refresh: "Refresh", strategyTitle: "🎯 Strategic Advice", goal: "Goal", goalGrowth: "📈 Revenue Growth", goalProfit: "💰 Profit Max", goalDebt: "📉 Debt Reduction", goalCash: "💵 Cash Flow", timeframe: "Timeframe (mo)", budget: "Budget (VND)", getAdvice: "Get Advice", chatTitle: "AI Chat", chatWelcome: "Hello! I'm your AI Consultant. Ask me about risks, cash flow, loans, or profits!", btnRisk: "Risk", btnCashflow: "Cash Flow", btnLoan: "Loan", btnProfit: "Profit", chatPlaceholder: "Ask something...", send: "Send", landingTitle: "Financial Analyzer Pro", landingSubtitle: "Enterprise-grade financial intelligence platform. Analyze risks, compare banks, optimize cash flow, and get AI-powered insights.", feat1Title: "Risk Assessment", feat1Desc: "Multi-dimensional risk analysis with 7 indicator groups and real-time scoring", feat2Title: "Bank Comparison", feat2Desc: "Compare loan packages from multiple banks with smart fit scoring", feat3Title: "AI Consultant", feat3Desc: "24/7 intelligent financial assistant powered by your actual business data", feat4Title: "NPV & IRR", feat4Desc: "Advanced investment analysis with Excel import and payback calculations", launchBtn: "Launch Application" }
+                vi: { exportPdf: "Xuất PDF", uploadBCTCTitle: "Tự động nhập từ Báo cáo tài chính (BCTC)", tabRisk: "Đánh giá rủi ro", tabNpv: "NPV & IRR", tabCompare: "So sánh ngân hàng", tabDashboard: "Dashboard", tabDeepRisk: "Rủi ro chuyên sâu", tabAi: "AI Tư vấn", kpiAssets: "Tổng tài sản", kpiRevenue: "Doanh thu", kpiProfit: "Lợi nhuận", kpiDE: "Tỷ lệ D/E", companyInfo: "📊 Thông tin doanh nghiệp", companyName: "🏢 Tên doanh nghiệp", industry: "🏭 Ngành", indMan: "Sản xuất", indTrade: "Thương mại", indSvc: "Dịch vụ", indTech: "Công nghệ", bizYears: "📅 Năm hoạt động", employees: "👥 Nhân viên", totalAssets: "📈 Tổng tài sản (VND)", currentAssets: "🏦 Tài sản ngắn hạn", fixedAssets: "🏭 Tài sản cố định", debt: "💳 Tổng nợ", financeLoan: "💰 Tài chính & Vay vốn", equity: "💰 Vốn chủ sở hữu", revenue: "📊 Doanh thu năm", netProfit: "📈 Lợi nhuận sau thuế", interestExp: "💰 Chi phí lãi vay", depreciation: "💵 Khấu hao", monthlyIncome: "💵 Thu nhập tháng", loanAmount: "💰 Số tiền vay", loanTerm: "📅 Thời hạn (tháng)", collateral: "📊 Tài sản đảm bảo", loanType: "🏦 Hình thức vay", typeCol: "Thế chấp", typeUnsec: "Tín chấp", macroTitle: "KINH TẾ VĨ MÔ", updateMacro: "Cập nhật tự động", manualMacro: "Nhập thủ công", gdp: "Tăng trưởng GDP", inflation: "Lạm phát", policyRate: "Lãi suất điều hành", exchange: "Tỷ giá USD/VND", applyMacro: "Áp dụng", quickRiskTitle: "📊 ĐÁNH GIÁ RỦI RO NHANH", profitMargin: "Biên LN", liquidity: "Thanh khoản", runQuickRisk: "ĐÁNH GIÁ RỦI RO NHANH", npvTitle: "💹 NPV & IRR", discountRate: "Lãi suất chiết khấu (%/năm)", calcNpv: "Tính NPV & IRR", downloadTpl: "Tải template", payback: "Hoàn vốn:", years: "năm", uploadExcel: "📂 Tải file Excel", readFile: "Đọc file", aiInsight: "💡 AI Insight", calcPrompt: "Tính NPV/IRR để nhận phân tích", bankCompare: "🏦 So sánh ngân hàng", finHealth: "SỨC KHỎE TÀI CHÍNH", companyValue: "GIÁ TRỊ DOANH NGHIỆP", creditRating: "XẾP HẠNG TÍN DỤNG", assetStruct: "📊 Cơ cấu tài sản", capitalStruct: "💵 Cơ cấu nguồn vốn", profitTrend: "📈 Xu hướng lợi nhuận", cashFlowChart: "💰 Dòng tiền", repaySchedule: "📅 Lịch trả nợ", interestRate: "Lãi suất (%/năm)", finRatios: "📊 Chỉ số tài chính", currentRatio: "Thanh toán HH", assetTurnover: "Vòng quay TS", deepRiskTitle: "🔍 Đánh giá rủi ro chuyên sâu", runDeepRisk: "PHÂN TÍCH TOÀN DIỆN", riskScore: "📊 Điểm rủi ro", outOf: "/100", radarTitle: "📊 Biểu đồ Radar", warnings: "⚠️ Cảnh báo sớm", recommendations: "✅ Khuyến nghị", overallAssess: "Đánh giá tổng hợp", clickAnalyze: 'Nhấn "Phân tích toàn diện" để xem', finStatus: "📊 Tình hình tài chính", refresh: "Cập nhật", strategyTitle: "🎯 Tư vấn chiến lược", goal: "Mục tiêu", goalGrowth: "📈 Tăng trưởng", goalProfit: "💰 Tối đa lợi nhuận", goalDebt: "📉 Giảm nợ", goalCash: "💵 Dòng tiền", timeframe: "Thời gian (tháng)", budget: "Ngân sách (VND)", getAdvice: "Nhận tư vấn", chatTitle: "Trò chuyện với AI", chatWelcome: "Xin chào! Tôi là AI Consultant. Hãy hỏi tôi về rủi ro, dòng tiền, vay vốn, hoặc lợi nhuận!", btnRisk: "Rủi ro", btnCashflow: "Dòng tiền", btnLoan: "Vay vốn", btnProfit: "Lợi nhuận", chatPlaceholder: "Nhập câu hỏi...", send: "Gửi", landingTitle: "Financial Analyzer Pro", landingSubtitle: "Nền tảng phân tích tài chính doanh nghiệp toàn diện. Phân tích rủi ro, so sánh ngân hàng, tối ưu dòng tiền và nhận tư vấn AI.", feat1Title: "Đánh giá rủi ro", feat1Desc: "Phân tích rủi ro đa chiều với 7 nhóm chỉ số và chấm điểm thời gian thực", feat2Title: "So sánh ngân hàng", feat2Desc: "So sánh các gói vay từ nhiều ngân hàng với điểm phù hợp thông minh", feat3Title: "AI Tư vấn", feat3Desc: "Trợ lý tài chính thông minh 24/7 dựa trên dữ liệu thực tế của bạn", feat4Title: "NPV & IRR", feat4Desc: "Phân tích đầu tư nâng cao với nhập Excel và tính toán hoàn vốn", launchBtn: "Khởi chạy ứng dụng" },
+                en: { exportPdf: "Export PDF", uploadBCTCTitle: "Auto-import from Financial Statements (BCTC)", tabRisk: "Risk Assessment", tabNpv: "NPV & IRR", tabCompare: "Bank Compare", tabDashboard: "Dashboard", tabDeepRisk: "Deep Risk", tabAi: "AI Consultant", kpiAssets: "Total Assets", kpiRevenue: "Revenue", kpiProfit: "Net Profit", kpiDE: "D/E Ratio", companyInfo: "📊 Company Info", companyName: "🏢 Company Name", industry: "🏭 Industry", indMan: "Manufacturing", indTrade: "Trading", indSvc: "Services", indTech: "Technology", bizYears: "📅 Years in Business", employees: "👥 Employees", totalAssets: "📈 Total Assets (VND)", currentAssets: "🏦 Current Assets", fixedAssets: "🏭 Fixed Assets", debt: "💳 Total Debt", financeLoan: "💰 Finance & Loan", equity: "💰 Equity", revenue: "📊 Annual Revenue", netProfit: "📈 Net Profit", interestExp: "💰 Interest Expense", depreciation: "💵 Depreciation", monthlyIncome: "💵 Monthly Income", loanAmount: "💰 Loan Amount", loanTerm: "📅 Loan Term (mo)", collateral: "📊 Collateral Value", loanType: "🏦 Loan Type", typeCol: "Collateral", typeUnsec: "Unsecured", macroTitle: "MACRO ECONOMY", updateMacro: "Auto Update", manualMacro: "Manual Input", gdp: "GDP Growth", inflation: "Inflation", policyRate: "Policy Rate", exchange: "USD/VND Rate", applyMacro: "Apply", quickRiskTitle: "📊 QUICK RISK ASSESSMENT", profitMargin: "Profit Margin", liquidity: "Liquidity", runQuickRisk: "RUN ASSESSMENT", npvTitle: "💹 NPV & IRR", discountRate: "Discount Rate (%/yr)", calcNpv: "Calculate NPV & IRR", downloadTpl: "Download Template", payback: "Payback:", years: "years", uploadExcel: "📂 Upload Excel", readFile: "Read File", aiInsight: "💡 AI Insight", calcPrompt: "Calculate NPV/IRR for analysis", bankCompare: "🏦 Bank Comparison", finHealth: "FINANCIAL HEALTH", companyValue: "COMPANY VALUE", creditRating: "CREDIT RATING", assetStruct: "📊 Asset Structure", capitalStruct: "💵 Capital Structure", profitTrend: "📈 Profit Trend", cashFlowChart: "💰 Cash Flow", repaySchedule: "📅 Repayment Schedule", interestRate: "Interest Rate (%/yr)", finRatios: "📊 Financial Ratios", currentRatio: "Current Ratio", assetTurnover: "Asset Turnover", deepRiskTitle: "🔍 Deep Risk Assessment", runDeepRisk: "RUN COMPREHENSIVE ANALYSIS", riskScore: "📊 Risk Score", outOf: "/100", radarTitle: "📊 Radar Chart", warnings: "⚠️ Early Warnings", recommendations: "✅ Recommendations", overallAssess: "Overall Assessment", clickAnalyze: 'Click "Run Comprehensive Analysis" to see results', finStatus: "📊 Financial Status", refresh: "Refresh", strategyTitle: "🎯 Strategic Advice", goal: "Goal", goalGrowth: "📈 Revenue Growth", goalProfit: "💰 Profit Max", goalDebt: "📉 Debt Reduction", goalCash: "💵 Cash Flow", timeframe: "Timeframe (mo)", budget: "Budget (VND)", getAdvice: "Get Advice", chatTitle: "AI Chat", chatWelcome: "Hello! I'm your AI Consultant. Ask me about risks, cash flow, loans, or profits!", btnRisk: "Risk", btnCashflow: "Cash Flow", btnLoan: "Loan", btnProfit: "Profit", chatPlaceholder: "Ask something...", send: "Send", landingTitle: "Financial Analyzer Pro", landingSubtitle: "Enterprise-grade financial intelligence platform. Analyze risks, compare banks, optimize cash flow, and get AI-powered insights.", feat1Title: "Risk Assessment", feat1Desc: "Multi-dimensional risk analysis with 7 indicator groups and real-time scoring", feat2Title: "Bank Comparison", feat2Desc: "Compare loan packages from multiple banks with smart fit scoring", feat3Title: "AI Consultant", feat3Desc: "24/7 intelligent financial assistant powered by your actual business data", feat4Title: "NPV & IRR", feat4Desc: "Advanced investment analysis with Excel import and payback calculations", launchBtn: "Launch Application" }
             },
 
             // ==================== WEB SCRAPER CONNECTION ====================
@@ -1616,7 +1973,7 @@
                 if (modal) {
                     modal.style.display = 'block';
                     if (title) title.textContent = this.currentLang === 'vi' ? 'Thêm Gói Vay' : 'Add Package';
-                    
+
                     // Clear inputs
                     document.getElementById('bankName').value = '';
                     document.getElementById('bankPackageName').value = '';
@@ -1644,7 +2001,7 @@
                 if (modal) {
                     modal.style.display = 'block';
                     if (title) title.textContent = this.currentLang === 'vi' ? 'Sửa Gói Vay' : 'Edit Package';
-                    
+
                     document.getElementById('bankName').value = b.name || '';
                     document.getElementById('bankPackageName').value = b.packageName || '';
                     document.getElementById('bankInterestRate').value = b.interestRate || '';
@@ -1767,7 +2124,9 @@
                         { id: 1, name: "Vietcombank", packageName: "Business Loan", interestRate: 4.6, processingFee: 0.5, maxTerm: 12, minLoan: 5e7, maxLoan: 3e10, maxLTV: 100, minIncome: 8e6, pros: "Low rate 4.6%/yr", cons: "Short term only", requirements: "Business plan", loanTypes: ["collateral"], source: "VCB" },
                         { id: 2, name: "BIDV", packageName: "Working Capital", interestRate: 7.0, processingFee: 0.3, maxTerm: 12, minLoan: 3e7, maxLoan: 1e10, maxLTV: 100, minIncome: 7e6, pros: "Fast disbursement", cons: "Floating rate", requirements: "Business docs", loanTypes: ["collateral"], source: "BIDV" },
                         { id: 3, name: "Techcombank", packageName: "SME Loan", interestRate: 5.99, processingFee: 0.8, maxTerm: 120, minLoan: 1e8, maxLoan: 8e9, maxLTV: 80, minIncome: 1e7, pros: "Preferential rate", cons: "High processing fee", requirements: "2Y financials", loanTypes: ["collateral"], source: "TCB" },
-                        { id: 4, name: "VPBank", packageName: "Business Loan", interestRate: 6.9, processingFee: 0.6, maxTerm: 120, minLoan: 5e7, maxLoan: 6e9, maxLTV: 75, minIncome: 8e6, pros: "Quick process", cons: "Processing fee", requirements: "Profitable ops", loanTypes: ["collateral"], source: "VPB" }
+                        { id: 4, name: "VPBank", packageName: "Business Loan", interestRate: 6.9, processingFee: 0.6, maxTerm: 120, minLoan: 5e7, maxLoan: 6e9, maxLTV: 75, minIncome: 8e6, pros: "Quick process", cons: "Processing fee", requirements: "Profitable ops", loanTypes: ["collateral"], source: "VPB" },
+                        { id: 5, name: "VPBank", packageName: "Cho vay bổ sung vốn lưu động siêu nhanh", interestRate: 7.5, processingFee: 0.5, maxTerm: 12, minLoan: 1e8, maxLoan: 3e9, maxLTV: 80, minIncome: 8e6, pros: "Phê duyệt nhanh trong 5 giờ", cons: "Kỳ hạn ngắn hạn", requirements: "Có dòng tiền qua tài khoản tốt", loanTypes: ["collateral"], source: "VPBank" },
+                        { id: 6, name: "Sacombank", packageName: "Thấu chi tài khoản doanh nghiệp", interestRate: 8.5, processingFee: 0.4, maxTerm: 12, minLoan: 5e7, maxLoan: 2e9, maxLTV: 75, minIncome: 8e6, pros: "Rút vốn nhanh chóng không cần làm hồ sơ giải ngân nhiều lần", cons: "Lãi suất cao hơn vay thế chấp thông thường", requirements: "Có doanh thu qua tài khoản Sacombank", loanTypes: ["collateral"], source: "Sacombank" }
                     ];
                     this.persistAll();
                     this.updateBankListDisplay();
@@ -1782,11 +2141,14 @@
             irr(cf, g = 0.1) { let r = g; for (let i = 0; i < 1000; i++) { let v = 0, d = 0; for (let t = 0; t < cf.length; t++) { const f = Math.pow(1 + r, t); v += cf[t] / f; d += (-t * cf[t]) / (f * (1 + r)); } if (Math.abs(v) < 1e-7) return r * 100; if (d === 0 || Math.abs(d) < 1e-10) break; r -= v / d; if (r < -0.99) r = -0.5; if (r > 5) r = 3; } return NaN; },
             getFinancialData() {
                 const a = this.parseNumber(document.getElementById('totalAssets')?.value);
+                const ca = this.parseNumber(document.getElementById('currentAssets')?.value);
+                const fa = Math.max(0, a - ca); // Tài sản cố định = Tổng TS - TS ngắn hạn
                 const d = this.parseNumber(document.getElementById('debt')?.value);
                 const e = a - d;
                 return {
-                    assets: a, currentAssets: this.parseNumber(document.getElementById('currentAssets')?.value),
-                    fixedAssets: this.parseNumber(document.getElementById('fixedAssets')?.value),
+                    assets: a,
+                    currentAssets: ca,
+                    fixedAssets: fa,
                     debt: d, equity: Math.max(0, e),
                     revenue: this.parseNumber(document.getElementById('annualRevenue')?.value),
                     netProfit: this.parseNumber(document.getElementById('netProfit')?.value),
@@ -1796,6 +2158,83 @@
                     employeeCount: parseInt(document.getElementById('employeeCount')?.value) || 1,
                     businessYears: parseInt(document.getElementById('businessYears')?.value) || 0
                 };
+            },
+
+            // ==================== I/S CALCULATOR ====================
+            calcIS() {
+                // Get monthly IS inputs
+                const monthlyRev = this.parseNumber(document.getElementById('monthlyRevenue')?.value) || 0;
+                const monthlyCOGS = this.parseNumber(document.getElementById('monthlyCOGS')?.value) || 0;
+                const monthlyOpex = this.parseNumber(document.getElementById('monthlyOpex')?.value) || 0;
+                const monthlyDep = this.parseNumber(document.getElementById('monthlyDepreciation')?.value) || 0;
+
+                // Get interest from selected bank loan package (Tab 3) or from loanAmount + loanTerm
+                const monthlyInterest = this.getMonthlyInterestFromLoan();
+
+                // EBT = Revenue - COGS - Opex - Depreciation - Interest
+                const ebt = monthlyRev - monthlyCOGS - monthlyOpex - monthlyDep - monthlyInterest;
+
+                // Tax 20% only if EBT > 0
+                const tax = ebt > 0 ? ebt * 0.20 : 0;
+                const monthlyNetProfit = ebt - tax;
+
+                const annualNetProfit = monthlyNetProfit * 12;
+                const annualRevenue = monthlyRev * 12;
+                const annualDep = monthlyDep * 12;
+                const annualInterest = monthlyInterest * 12;
+
+                // Update display elements
+                const fmt = (v) => (v >= 0 ? '' : '-') + Math.abs(Math.round(v)).toLocaleString('en-US') + 'đ';
+                const fmtColor = (v) => v >= 0 ? 'var(--success)' : 'var(--danger)';
+
+                const monthlyInterestEl = document.getElementById('monthlyInterestDisplay');
+                const ebtEl = document.getElementById('monthlyEBTDisplay');
+                const taxEl = document.getElementById('monthlyTaxDisplay');
+                const netProfitEl = document.getElementById('monthlyNetProfitDisplay');
+                const annualNetEl = document.getElementById('annualNetProfitDisplay');
+                const annualRevEl = document.getElementById('annualRevenueDisplay');
+
+                if (monthlyInterestEl) monthlyInterestEl.textContent = fmt(monthlyInterest);
+                if (ebtEl) { ebtEl.textContent = fmt(ebt); ebtEl.style.color = fmtColor(ebt); }
+                if (taxEl) taxEl.textContent = fmt(tax);
+                if (netProfitEl) { netProfitEl.textContent = fmt(monthlyNetProfit); netProfitEl.style.color = fmtColor(monthlyNetProfit); }
+                if (annualNetEl) { annualNetEl.textContent = fmt(annualNetProfit); annualNetEl.style.color = fmtColor(annualNetProfit); }
+                if (annualRevEl) annualRevEl.textContent = fmt(annualRevenue);
+
+                // Sync hidden inputs for downstream calculations
+                const setHidden = (id, val) => { const el = document.getElementById(id); if (el) el.value = Math.round(val); };
+                setHidden('annualRevenue', annualRevenue);
+                setHidden('netProfit', annualNetProfit);
+                setHidden('interestExpense', annualInterest);
+                setHidden('depreciation', annualDep);
+                setHidden('monthlyIncome', monthlyNetProfit);
+
+                // Trigger main sync to update KPIs
+                this.syncData();
+            },
+
+            getMonthlyInterestFromLoan() {
+                // Try to get from the selected bank package (stored in App.selectedBankRate)
+                // Fallback: use loanAmount + loanTerm + a default rate (or best bank rate)
+                const loanAmt = this.parseNumber(document.getElementById('loanAmount')?.value) || 0;
+                const loanTerm = parseInt(document.getElementById('loanTerm')?.value) || 120;
+
+                let annualRate = this.selectedBankRate || null;
+
+                if (!annualRate) {
+                    // Use best (lowest) available bank rate from database
+                    if (this.BANK_DATABASE && this.BANK_DATABASE.length > 0) {
+                        annualRate = Math.min(...this.BANK_DATABASE.map(b => b.interestRate));
+                    } else {
+                        annualRate = 10; // fallback 10%/year
+                    }
+                }
+
+                if (loanAmt <= 0) return 0;
+                const monthlyRate = annualRate / 100 / 12;
+                // Monthly interest = PMT × months → but simpler: simple interest first month
+                // Use PMT and extract interest portion (first month ≈ loanAmt × monthlyRate)
+                return Math.round(loanAmt * monthlyRate);
             },
 
             // ==================== PERSISTENCE ====================
@@ -2061,8 +2500,15 @@
             // ==================== SYNC & QUICK RISK ====================
             syncData() {
                 const d = this.getFinancialData();
+
+                // Auto-calculate fixed assets (readonly)
+                const fixedAssetsEl = document.getElementById('fixedAssets');
+                if (fixedAssetsEl) fixedAssetsEl.value = d.fixedAssets > 0 ? d.fixedAssets.toLocaleString('en-US') : '0';
+
+                // Update equity (readonly)
                 const equityEl = document.getElementById('equity');
                 if (equityEl) equityEl.value = d.equity.toLocaleString('en-US');
+
                 const isVi = this.currentLang === 'vi';
                 const naStr = isVi ? 'N/A' : 'N/A';
                 const roe = d.equity > 0 ? (d.netProfit / d.equity) * 100 : null;
@@ -2086,155 +2532,225 @@
                 this.syncData();
 
                 const d = this.getFinancialData();
-                const deR = d.equity > 0 ? d.debt / d.equity : 3;
-                const icr = d.interestExpense > 0 ? (d.netProfit + d.interestExpense) / d.interestExpense : 1;
-                const pm = d.revenue > 0 ? (d.netProfit / d.revenue) * 100 : 0;
-                const cr = d.debt > 0 ? d.currentAssets / (d.debt * 0.5) : 0;
-                const years = d.businessYears;
 
-                // Chấm điểm từng yếu tố (0-100)
+                // Lấy số liệu hàng tháng
+                const monthlyRev = this.parseNumber(document.getElementById('monthlyRevenue')?.value) || 0;
+                const monthlyCOGS = this.parseNumber(document.getElementById('monthlyCOGS')?.value) || 0;
+                const monthlyOpex = this.parseNumber(document.getElementById('monthlyOpex')?.value) || 0;
+                const monthlyDep = this.parseNumber(document.getElementById('monthlyDepreciation')?.value) || 0;
+                const monthlyInterest = this.getMonthlyInterestFromLoan();
+
+                const ebt = monthlyRev - monthlyCOGS - monthlyOpex - monthlyDep - monthlyInterest;
+                const tax = ebt > 0 ? ebt * 0.20 : 0;
+                const monthlyNet = ebt - tax;
+
+                // 8 Chỉ số tài chính cốt lõi
+                const cr = d.debt > 0 ? d.currentAssets / (d.debt * 0.5) : 0; // Current Ratio
+                const deR = d.equity > 0 ? d.debt / d.equity : 3; // D/E Ratio
+                const icr = d.interestExpense > 0 ? (d.netProfit + d.interestExpense) / d.interestExpense : 999; // ICR
+                const pm = d.revenue > 0 ? (d.netProfit / d.revenue) * 100 : 0; // Net Margin (%)
+                const at = d.assets > 0 ? d.revenue / d.assets : 0; // Asset Turnover
+                const roa = d.assets > 0 ? (d.netProfit / d.assets) * 100 : 0; // ROA (%)
+                const roe = d.equity > 0 ? (d.netProfit / d.equity) * 100 : 0; // ROE (%)
+
+                // Tính toán DSCR (Hệ số khả năng trả nợ)
+                const loanAmt = this.parseNumber(document.getElementById('loanAmount')?.value) || 0;
+                const loanTerm = parseInt(document.getElementById('loanTerm')?.value) || 120;
+                const monthlyPrincipal = loanTerm > 0 ? loanAmt / loanTerm : 0;
+                const monthlyDebtService = monthlyPrincipal + monthlyInterest;
+
+                // EBITDA = Net Profit + Tax + Interest + Depreciation
+                const monthlyEBITDA = monthlyNet + tax + monthlyInterest + monthlyDep;
+                const dscr = monthlyDebtService > 0 ? monthlyEBITDA / monthlyDebtService : 999;
+
+                // Điều chỉnh Benchmarks theo ngành kinh doanh
+                const industry = document.getElementById('industry')?.value || 'manufacturing';
+                let benchmarks = {
+                    cr: { min: 1.5, max: 2.5, desc: "1.5 - 2.5 (Thanh khoản chuẩn)" },
+                    de: { min: 0.5, max: 1.5, desc: "0.5 - 1.5 (Tối ưu đòn bẩy)" },
+                    icr: { min: 2.0, desc: "> 2.0 (Khả năng trả lãi - Basel III)" },
+                    pm: { min: 5.0, desc: "> 5.0% (Biên sinh lời ròng)" },
+                    at: { min: 1.0, desc: "> 1.0 lần (Hiệu suất tài sản)" },
+                    roa: { min: 6.0, desc: "> 6.0% (Sinh lời trên tài sản)" },
+                    roe: { min: 12.0, desc: "> 12.0% (Sinh lời trên vốn CSH)" },
+                    dscr: { min: 1.25, desc: "> 1.25 lần (Trả nợ - TT 11/2021)" }
+                };
+
+                if (industry === 'trading') {
+                    benchmarks.pm.min = 2.0; benchmarks.pm.desc = "> 2.0% (Biên mỏng ngành thương mại)";
+                    benchmarks.at.min = 2.0; benchmarks.at.desc = "> 2.0 lần (Vòng quay nhanh)";
+                } else if (industry === 'services') {
+                    benchmarks.pm.min = 10.0; benchmarks.pm.desc = "> 10.0% (Dịch vụ biên sinh lời cao)";
+                    benchmarks.at.min = 0.8; benchmarks.at.desc = "> 0.8 lần (Thâm dụng vốn nhẹ)";
+                } else if (industry === 'technology') {
+                    benchmarks.pm.min = 12.0; benchmarks.pm.desc = "> 12.0% (Công nghệ biên cao)";
+                    benchmarks.at.min = 0.8; benchmarks.at.desc = "> 0.8 lần (Tập trung chất xám)";
+                }
+
+                // Chấm điểm các nhóm chỉ số (Tổng điểm tối đa 100)
                 let score = 0;
+                let details = [];
+
+                // 1. Current Ratio (trọng số 15%)
+                let crScore = 0;
+                if (cr >= benchmarks.cr.min && cr <= benchmarks.cr.max) crScore = 15;
+                else if (cr >= 1.0 && cr < benchmarks.cr.min) crScore = 10;
+                else if (cr > benchmarks.cr.max) crScore = 8;
+                else crScore = 3;
+                score += crScore;
+                details.push({ name: 'Thanh toán hiện thời (CR)', val: cr.toFixed(2), benchmark: benchmarks.cr.desc, status: crScore >= 12 ? '🟢 Tốt' : (crScore >= 8 ? '🟡 Đạt' : '🔴 Yếu'), citation: 'VAS 24' });
+
+                // 2. D/E Ratio (trọng số 15%)
+                let deScore = 0;
+                if (deR <= benchmarks.de.max) deScore = 15;
+                else if (deR <= 2.5) deScore = 10;
+                else if (deR <= 3.5) deScore = 5;
+                else deScore = 0;
+                score += deScore;
+                details.push({ name: 'Đòn bẩy tài chính (D/E)', val: deR.toFixed(2), benchmark: benchmarks.de.desc, status: deScore >= 12 ? '🟢 An toàn' : (deScore >= 8 ? '🟡 Cảnh báo' : '🔴 Rủi ro'), citation: 'VAS Corporate' });
+
+                // 3. ICR (trọng số 10%)
+                let icrScore = 0;
+                if (icr >= benchmarks.icr.min) icrScore = 10;
+                else if (icr >= 1.5) icrScore = 6;
+                else icrScore = 0;
+                score += icrScore;
+                details.push({ name: 'Khả năng trả lãi (ICR)', val: icr > 999 ? '∞' : icr.toFixed(1), benchmark: benchmarks.icr.desc, status: icrScore >= 10 ? '🟢 Tốt' : (icrScore >= 6 ? '🟡 Cảnh báo' : '🔴 Rủi ro'), citation: 'Basel III' });
+
+                // 4. Net Margin (trọng số 15%)
+                let pmScore = 0;
+                if (pm >= benchmarks.pm.min) pmScore = 15;
+                else if (pm >= benchmarks.pm.min * 0.5) pmScore = 10;
+                else pmScore = 3;
+                score += pmScore;
+                details.push({ name: 'Biên lợi nhuận ròng (PM)', val: pm.toFixed(1) + '%', benchmark: benchmarks.pm.desc, status: pmScore >= 12 ? '🟢 Tốt' : (pmScore >= 8 ? '🟡 Đạt' : '🔴 Yếu'), citation: 'VAS 02' });
+
+                // 5. Asset Turnover (trọng số 10%)
+                let atScore = 0;
+                if (at >= benchmarks.at.min) atScore = 10;
+                else if (at >= benchmarks.at.min * 0.6) atScore = 6;
+                else atScore = 2;
+                score += atScore;
+                details.push({ name: 'Hiệu quả sử dụng TS (ATO)', val: at.toFixed(2), benchmark: benchmarks.at.desc, status: atScore >= 10 ? '🟢 Tốt' : (atScore >= 6 ? '🟡 Đạt' : '🔴 Yếu'), citation: 'VAS Standard' });
+
+                // 6. ROA (trọng số 10%)
+                let roaScore = 0;
+                if (roa >= benchmarks.roa.min) roaScore = 10;
+                else if (roa >= benchmarks.roa.min * 0.5) roaScore = 6;
+                else roaScore = 0;
+                score += roaScore;
+                details.push({ name: 'Sinh lời trên tài sản (ROA)', val: roa.toFixed(1) + '%', benchmark: benchmarks.roa.desc, status: roaScore >= 10 ? '🟢 Tốt' : (roaScore >= 6 ? '🟡 Đạt' : '🔴 Yếu'), citation: 'VAS Standard' });
+
+                // 7. ROE (trọng số 15%)
+                let roeScore = 0;
+                if (roe >= benchmarks.roe.min) roeScore = 15;
+                else if (roe >= benchmarks.roe.min * 0.5) roeScore = 10;
+                else roeScore = 3;
+                score += roeScore;
+                details.push({ name: 'Sinh lời trên vốn CSH (ROE)', val: roe.toFixed(1) + '%', benchmark: benchmarks.roe.desc, status: roeScore >= 12 ? '🟢 Tốt' : (roeScore >= 8 ? '🟡 Đạt' : '🔴 Yếu'), citation: 'DuPont Model' });
+
+                // 8. DSCR (trọng số 10%)
+                let dscrScore = 0;
+                if (dscr >= benchmarks.dscr.min || dscr === 999) dscrScore = 10;
+                else if (dscr >= 1.0) dscrScore = 6;
+                else dscrScore = 0;
+                score += dscrScore;
+                details.push({ name: 'Khả năng trả nợ (DSCR)', val: dscr > 999 ? 'N/A' : dscr.toFixed(2), benchmark: benchmarks.dscr.desc, status: dscrScore >= 10 ? '🟢 Tốt' : (dscrScore >= 6 ? '🟡 Cảnh báo' : '🔴 Rủi ro'), citation: 'TT 11/2021/TT-NHNN' });
+
+                // Cảnh báo và Điểm mạnh
                 let warnings = [];
                 let strengths = [];
 
-                // 1. Đòn bẩy (D/E) - 30 điểm
-                if (deR < 1.5) {
-                    score += 30;
-                    strengths.push('✅ Đòn bẩy thấp, doanh nghiệp ít phụ thuộc vào nợ');
-                } else if (deR < 2.5) {
-                    score += 20;
-                    strengths.push('⚠️ Đòn bẩy ở mức chấp nhận được');
-                } else if (deR < 3.5) {
-                    score += 10;
-                    warnings.push('⚠️ Đòn bẩy cao, doanh nghiệp phụ thuộc nhiều vào vay nợ');
-                } else {
-                    score += 0;
-                    warnings.push('🔴 Đòn bẩy rất cao, rủi ro tài chính lớn');
-                }
+                if (cr < 1.2) warnings.push('⚠️ Thanh khoản yếu: Tài sản ngắn hạn chưa đủ tốt để chi trả nợ ngắn hạn.');
+                else strengths.push('✅ Khả năng thanh toán ngắn hạn (Current Ratio) ở ngưỡng an toàn.');
 
-                // 2. Khả năng trả lãi (ICR) - 25 điểm
-                if (icr > 5) {
-                    score += 25;
-                    strengths.push('✅ Khả năng trả lãi rất tốt');
-                } else if (icr > 3) {
-                    score += 20;
-                    strengths.push('✅ Khả năng trả lãi tốt');
-                } else if (icr > 2) {
-                    score += 12;
-                } else if (icr > 1.5) {
-                    score += 6;
-                    warnings.push('⚠️ Khả năng trả lãi ở ngưỡng cảnh báo');
-                } else {
-                    score += 0;
-                    warnings.push('🔴 Nguy cơ mất khả năng trả lãi');
-                }
+                if (deR > 2.5) warnings.push('⚠️ Đòn bẩy tài chính cao: Doanh nghiệp phụ thuộc nhiều vào nợ vay ngoài.');
+                else strengths.push('✅ Tỷ lệ nợ/vốn chủ sở hữu (D/E) nằm trong vùng kiểm soát tốt.');
 
-                // 3. Biên lợi nhuận (Profit Margin) - 25 điểm
-                if (pm > 15) {
-                    score += 25;
-                    strengths.push('✅ Biên lợi nhuận cao, kinh doanh hiệu quả');
-                } else if (pm > 10) {
-                    score += 20;
-                    strengths.push('✅ Biên lợi nhuận tốt');
-                } else if (pm > 5) {
-                    score += 12;
-                } else if (pm > 2) {
-                    score += 6;
-                    warnings.push('⚠️ Biên lợi nhuận thấp');
-                } else {
-                    score += 0;
-                    warnings.push('🔴 Biên lợi nhuận rất thấp, doanh nghiệp có thể lỗ');
-                }
+                if (dscr < 1.25 && dscr !== 999) warnings.push('🔴 Khả năng trả nợ gốc lãi (DSCR) yếu: Dòng tiền hoạt động kinh doanh khó đáp ứng nghĩa vụ nợ đến hạn.');
+                else if (dscr !== 999) strengths.push('✅ Khả năng trả nợ gốc lãi (DSCR) đạt tiêu chí thẩm định tín dụng của ngân hàng.');
 
-                // 4. Thanh khoản (Current Ratio) - 10 điểm
-                if (cr > 1.5) {
-                    score += 10;
-                    strengths.push('✅ Thanh khoản tốt');
-                } else if (cr > 1) {
-                    score += 6;
-                } else {
-                    score += 0;
-                    warnings.push('⚠️ Thanh khoản yếu, khó trả nợ ngắn hạn');
-                }
-
-                // 5. Kinh nghiệm (Số năm) - 10 điểm
-                if (years > 5) {
-                    score += 10;
-                    strengths.push('✅ Doanh nghiệp có bề dày kinh nghiệm');
-                } else if (years > 3) {
-                    score += 6;
-                } else {
-                    score += 0;
-                    warnings.push('⚠️ Doanh nghiệp non trẻ, thiếu lịch sử hoạt động');
-                }
+                if (pm < benchmarks.pm.min) warnings.push('⚠️ Biên lợi nhuận ròng thấp hơn so với mặt bằng chung ngành.');
+                if (roe < 12.0) warnings.push('⚠️ Hiệu quả sinh lời vốn CSH (ROE) chưa tối ưu.');
 
                 // Xác định mức rủi ro tổng thể
                 let riskLevel, riskColor, riskIcon, recommendation;
                 if (score >= 80) {
-                    riskLevel = 'RỦI RO THẤP';
-                    riskColor = '#10b981';
-                    riskIcon = '🟢';
-                    recommendation = 'Doanh nghiệp có nền tảng tài chính vững chắc. Nên duy trì và tiếp tục cải thiện.';
+                    riskLevel = 'RỦI RO THẤP'; riskColor = '#10b981'; riskIcon = '🟢';
+                    recommendation = 'Doanh nghiệp có cấu trúc tài chính lành mạnh, xếp hạng tín dụng cao. Rất dễ tiếp cận các nguồn tín dụng giá rẻ.';
                 } else if (score >= 60) {
-                    riskLevel = 'RỦI RO TRUNG BÌNH THẤP';
-                    riskColor = '#34d399';
-                    riskIcon = '🟢';
-                    recommendation = 'Doanh nghiệp hoạt động ổn định. Có thể tiếp cận vay vốn với điều kiện bình thường.';
+                    riskLevel = 'RỦI RO TRUNG BÌNH THẤP'; riskColor = '#34d399'; riskIcon = '🟢';
+                    recommendation = 'Doanh nghiệp hoạt động ổn định, thanh khoản và đòn bẩy tài chính cân đối tốt. Thẩm định gói vay thông thường thuận lợi.';
                 } else if (score >= 40) {
-                    riskLevel = 'RỦI RO TRUNG BÌNH';
-                    riskColor = '#f59e0b';
-                    riskIcon = '🟡';
-                    recommendation = 'Doanh nghiệp có một số điểm yếu. Cần cải thiện trước khi vay vốn.';
+                    riskLevel = 'RỦI RO TRUNG BÌNH'; riskColor = '#f59e0b'; riskIcon = '🟡';
+                    recommendation = 'Doanh nghiệp có một vài chỉ báo yếu về biên lợi nhuận hoặc thanh khoản. Nên tối ưu vận hành hoặc giảm nợ vay trước khi vay thêm.';
                 } else if (score >= 20) {
-                    riskLevel = 'RỦI RO CAO';
-                    riskColor = '#f97316';
-                    riskIcon = '🟠';
-                    recommendation = 'Doanh nghiệp có nhiều điểm yếu. Khó tiếp cận vay vốn ngân hàng.';
+                    riskLevel = 'RỦI RO CAO'; riskColor = '#f97316'; riskIcon = '🟠';
+                    recommendation = 'Hồ sơ tài chính có đòn bẩy cao và thanh khoản yếu. Ngân hàng sẽ yêu cầu tài sản bảo đảm chặt chẽ cùng mức lãi suất cao.';
                 } else {
-                    riskLevel = 'RỦI RO RẤT CAO';
-                    riskColor = '#ef4444';
-                    riskIcon = '🔴';
-                    recommendation = 'Doanh nghiệp có vấn đề tài chính nghiêm trọng. Cần tái cấu trúc ngay.';
+                    riskLevel = 'RỦI RO RẤT CAO'; riskColor = '#ef4444'; riskIcon = '🔴';
+                    recommendation = 'Doanh nghiệp mất cân đối tài chính nghiêm trọng, rủi ro vỡ nợ cao. Cần lập tức thực hiện tái cấu trúc dòng tiền toàn diện.';
                 }
 
-                // Hiển thị kết quả
+                // Render bảng chỉ số chi tiết
+                let tblHtml = `
+                    <table class="table" style="width: 100%; font-size: 0.8rem; margin-top: 15px; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: rgba(37,99,235,0.08);">
+                                <th style="padding: 8px 10px; text-align: left;">Chỉ số phân tích</th>
+                                <th style="padding: 8px 10px;">Giá trị</th>
+                                <th style="padding: 8px 10px;">Benchmark</th>
+                                <th style="padding: 8px 10px;">Đánh giá</th>
+                                <th style="padding: 8px 10px; font-size: 0.7rem;">Cơ sở học thuật</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                details.forEach(item => {
+                    tblHtml += `
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 8px 10px; font-weight: 500;">${item.name}</td>
+                            <td style="padding: 8px 10px; text-align: center; font-weight: bold;">${item.val}</td>
+                            <td style="padding: 8px 10px; text-align: center; color: var(--text-secondary); font-size:0.75rem;">${item.benchmark}</td>
+                            <td style="padding: 8px 10px; text-align: center; font-weight: 600;">${item.status}</td>
+                            <td style="padding: 8px 10px; text-align: center; font-size: 0.7rem; color: var(--text-secondary); font-style: italic;">${item.citation}</td>
+                        </tr>
+                    `;
+                });
+
+                tblHtml += `
+                        </tbody>
+                    </table>
+                    <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 8px; font-style: italic; text-align: right;">
+                        * Nguồn tham chiếu: Chuẩn mực Kế toán VN (VAS), Hiệp ước Basel III & Thông tư 11/2021/TT-NHNN của Ngân hàng Nhà nước VN.
+                    </div>
+                `;
+
                 const resultHtml = `
-        <div style="text-align: center;">
-            <div style="font-size: 3rem; color: ${riskColor};">${riskIcon}</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: ${riskColor};">${riskLevel}</div>
-            <div style="font-size: 2rem; font-weight: 800; margin: 10px 0;">${score}/100</div>
-            <p style="margin: 10px 0;">${recommendation}</p>
-        </div>
-        <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.2);">
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-            <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 20px;">
-                📊 D/E: ${deR.toFixed(2)}
-            </div>
-            <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 20px;">
-                💰 ICR: ${icr > 999 ? '∞' : icr.toFixed(1)}
-            </div>
-            <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 20px;">
-                📈 PM: ${pm.toFixed(1)}%
-            </div>
-            <div style="background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 20px;">
-                💧 CR: ${cr.toFixed(2)}
-            </div>
-        </div>
-        ${warnings.length > 0 ? `
-            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.2);">
-            <div style="font-size: 0.85rem;">
-                <strong>⚠️ Cảnh báo:</strong><br>
-                ${warnings.map(w => `• ${w}`).join('<br>')}
-            </div>
-        ` : ''}
-        ${strengths.length > 0 ? `
-            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.2);">
-            <div style="font-size: 0.85rem;">
-                <strong>✅ Điểm mạnh:</strong><br>
-                ${strengths.map(s => `• ${s}`).join('<br>')}
-            </div>
-        ` : ''}
-    `;
+                    <div style="text-align: center; padding: 10px 0;">
+                        <div style="font-size: 3rem; color: ${riskColor}; line-height: 1;">${riskIcon}</div>
+                        <div style="font-size: 1.4rem; font-weight: 800; color: ${riskColor}; margin-top: 5px;">${riskLevel}</div>
+                        <div style="font-size: 2.2rem; font-weight: 900; margin: 5px 0; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">${score}/100</div>
+                        <p style="margin: 8px 0; font-size: 0.9rem; line-height: 1.4; color: var(--text); font-weight: 500;">${recommendation}</p>
+                    </div>
+                    <hr style="margin: 10px 0; border-color: var(--border);">
+                    ${tblHtml}
+                    ${warnings.length > 0 ? `
+                        <hr style="margin: 10px 0; border-color: var(--border);">
+                        <div style="font-size: 0.85rem; text-align: left;">
+                            <strong style="color:var(--danger)">⚠️ Cảnh báo rủi ro tiềm ẩn:</strong><br>
+                            ${warnings.map(w => `• ${w}`).join('<br>')}
+                        </div>
+                    ` : ''}
+                    ${strengths.length > 0 ? `
+                        <hr style="margin: 10px 0; border-color: var(--border);">
+                        <div style="font-size: 0.85rem; text-align: left;">
+                            <strong style="color:var(--success)">✅ Lợi thế tài chính:</strong><br>
+                            ${strengths.map(s => `• ${s}`).join('<br>')}
+                        </div>
+                    ` : ''}
+                `;
 
                 document.getElementById('quickRiskResult').innerHTML = resultHtml;
             },
@@ -2242,18 +2758,177 @@
             // ==================== NPV IRR ====================
             calculateNpvIrr() {
                 const text = document.getElementById('cashflows')?.value || '';
-                const flows = text.split(/[,\n]/).map(v => parseFloat(v.trim().replace(/[^0-9-]/g, ''))).filter(v => !isNaN(v));
+                const flows = text.split(/[,\n]/).map(v => parseFloat(v.trim().replace(/[^0-9.-]/g, ''))).filter(v => !isNaN(v));
                 if (!flows.length) return;
                 const dr = parseFloat(document.getElementById('discountRate')?.value) || 10;
-                const n = this.npv(flows, dr), i = this.irr(flows);
-                document.getElementById('npvValue').innerHTML = n.toLocaleString('en-US') + ' VND';
-                document.getElementById('irrValue').innerHTML = (isNaN(i) ? 'N/A' : i.toFixed(2)) + ' %';
-                let pb = '> ' + flows.length, cum = 0;
-                for (let idx = 0; idx < flows.length; idx++) { cum += flows[idx]; if (cum >= 0) { pb = (idx + (cum - flows[idx]) / flows[idx]).toFixed(1); break; } }
-                document.getElementById('paybackPeriod').innerHTML = pb;
+                const npvVal = this.npv(flows, dr);
+                const irrVal = this.irr(flows);
                 const isVi = this.currentLang === 'vi';
-                const insight = !isNaN(i) && i > dr && n > 0 ? (isVi ? '✅ NÊN ĐẦU TƯ' : '✅ INVEST') : n > 0 ? (isVi ? '⚠️ CÂN NHẮC' : '⚠️ CONSIDER') : (isVi ? '❌ KHÔNG NÊN' : '❌ AVOID');
-                document.getElementById('investmentInsight').innerHTML = `<div class="insight-box"><strong>${insight}</strong><br>IRR=${isNaN(i) ? 'N/A' : i.toFixed(2) + '%'} vs ${dr}%</div>`;
+
+                // ── Basic results ──
+                const fmt = v => (v >= 0 ? '' : '−') + Math.abs(v).toLocaleString('en-US') + ' ₫';
+                document.getElementById('npvValue').innerHTML = fmt(Math.round(npvVal));
+                document.getElementById('irrValue').innerHTML = isNaN(irrVal) ? 'N/A' : irrVal.toFixed(2) + '%';
+                let pb = '> ' + (flows.length - 1), cum = 0;
+                for (let idx = 0; idx < flows.length; idx++) {
+                    const prev = cum; cum += flows[idx];
+                    if (cum >= 0 && idx > 0) { pb = (idx - 1 + (prev < 0 ? Math.abs(prev) / flows[idx] : 0)).toFixed(1); break; }
+                }
+                document.getElementById('paybackPeriod').innerHTML = pb;
+
+                // ── AI Insight ──
+                let insightHtml = '';
+                const decision = !isNaN(irrVal) && irrVal > dr && npvVal > 0
+                    ? `<div style="font-size:1.5rem;font-weight:900;color:#10b981;">✅ NÊN ĐẦU TƯ</div>`
+                    : npvVal > 0
+                    ? `<div style="font-size:1.5rem;font-weight:900;color:#f59e0b;">⚠️ CÂN NHẮC</div>`
+                    : `<div style="font-size:1.5rem;font-weight:900;color:#ef4444;">❌ KHÔNG NÊN</div>`;
+                const reasonLines = [];
+                if (npvVal > 0) reasonLines.push(`✅ NPV dương (+${fmt(Math.round(npvVal))}) — dự án tạo ra giá trị tăng thêm.`);
+                else reasonLines.push(`❌ NPV âm (${fmt(Math.round(npvVal))}) — dự án phá huỷ giá trị.`);
+                if (!isNaN(irrVal)) {
+                    if (irrVal > dr) reasonLines.push(`✅ IRR (${irrVal.toFixed(1)}%) cao hơn lãi suất chiết khấu (${dr}%) — vượt ngưỡng sinh lời tối thiểu.`);
+                    else reasonLines.push(`⚠️ IRR (${irrVal.toFixed(1)}%) thấp hơn lãi suất chiết khấu (${dr}%) — chưa đủ sinh lời.`);
+                }
+                reasonLines.push(`📅 Thời gian hoàn vốn: <strong>${pb}</strong> năm.`);
+                insightHtml = `${decision}<div style="margin-top:10px;font-size:0.85rem;line-height:1.7;">${reasonLines.map(l => `<div>${l}</div>`).join('')}</div>`;
+                document.getElementById('investmentInsight').innerHTML = insightHtml;
+
+                // ── Break-even ──
+                const initInvest = flows.filter(f => f < 0).reduce((s, v) => s + Math.abs(v), 0);
+                const totalInflows = flows.filter(f => f > 0).reduce((s, v) => s + v, 0);
+                const netProfit = totalInflows - initInvest;
+                const roi = initInvest > 0 ? (netProfit / initInvest * 100) : 0;
+                const bkBox = document.getElementById('breakevenBox');
+                if (bkBox) {
+                    bkBox.style.display = 'block';
+                    document.getElementById('breakevenInitial').textContent = fmt(initInvest);
+                    document.getElementById('breakevenInflows').textContent = fmt(totalInflows);
+                    document.getElementById('breakevenNetProfit').textContent = fmt(netProfit);
+                    document.getElementById('breakevenNetProfit').style.color = netProfit >= 0 ? 'var(--success)' : 'var(--danger)';
+                    document.getElementById('breakevenROI').textContent = roi.toFixed(1) + '%';
+                }
+
+                // ── Cashflow Chart ──
+                const labels = flows.map((_, idx) => `Năm ${idx}`);
+                const cumulativeData = [];
+                let runSum = 0;
+                flows.forEach(f => { runSum += f; cumulativeData.push(runSum); });
+                const barColors = flows.map(f => f >= 0 ? 'rgba(16,185,129,0.75)' : 'rgba(239,68,68,0.75)');
+
+                const wrapper = document.getElementById('cashflowChartWrapper');
+                const empty = document.getElementById('cashflowChartEmpty');
+                if (wrapper) wrapper.style.display = 'block';
+                if (empty) empty.style.display = 'none';
+
+                if (this._cashflowChart) { this._cashflowChart.destroy(); this._cashflowChart = null; }
+                const ctx = document.getElementById('cashflowChart');
+                if (ctx) {
+                    this._cashflowChart = new Chart(ctx, {
+                        data: {
+                            labels,
+                            datasets: [
+                                {
+                                    type: 'bar', label: 'Dòng tiền (₫)',
+                                    data: flows, backgroundColor: barColors,
+                                    borderRadius: 6, yAxisID: 'y'
+                                },
+                                {
+                                    type: 'line', label: 'Tích lũy (₫)',
+                                    data: cumulativeData, borderColor: '#7c3aed',
+                                    backgroundColor: 'rgba(124,58,237,0.08)',
+                                    borderWidth: 2.5, pointRadius: 4,
+                                    pointBackgroundColor: cumulativeData.map(v => v >= 0 ? '#10b981' : '#ef4444'),
+                                    tension: 0.3, fill: true, yAxisID: 'y'
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: true, position: 'top' },
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => ` ${ctx.dataset.label}: ${Number(ctx.raw).toLocaleString('en-US')} ₫`
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    ticks: { callback: v => (Math.abs(v) >= 1e9 ? (v/1e9).toFixed(1)+'B' : Math.abs(v) >= 1e6 ? (v/1e6).toFixed(0)+'M' : v) }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // ── Sensitivity Analysis Table ──
+                const rates = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 25, 28, 30];
+                let tblHtml = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+                    <thead><tr style="background:rgba(37,99,235,0.1);">
+                        <th style="padding:8px 10px;text-align:left;border-radius:8px 0 0 0;">Lãi suất chiết khấu</th>
+                        <th style="padding:8px 10px;text-align:right;">NPV (₫)</th>
+                        <th style="padding:8px 10px;text-align:center;border-radius:0 8px 0 0;">Đánh giá</th>
+                    </tr></thead><tbody>`;
+                rates.forEach(r => {
+                    const n = this.npv(flows, r);
+                    const isBase = r === Math.round(dr);
+                    const posColor = 'rgba(16,185,129,0.12)';
+                    const negColor = 'rgba(239,68,68,0.12)';
+                    const bg = isBase ? 'rgba(37,99,235,0.15)' : (n >= 0 ? posColor : negColor);
+                    const status = n >= 0 ? '🟢 Có lời' : '🔴 Lỗ';
+                    tblHtml += `<tr style="border-bottom:1px solid var(--border);background:${bg}${isBase ? ';font-weight:700;' : ''}">
+                        <td style="padding:7px 10px;">${r}%${isBase ? ' ← Hiện tại' : ''}</td>
+                        <td style="padding:7px 10px;text-align:right;color:${n>=0?'var(--success)':'var(--danger)'}">${fmt(Math.round(n))}</td>
+                        <td style="padding:7px 10px;text-align:center;">${status}</td>
+                    </tr>`;
+                });
+                tblHtml += '</tbody></table></div>';
+                const sensEl = document.getElementById('sensitivityTable');
+                if (sensEl) sensEl.innerHTML = tblHtml;
+
+                // ── Scenario Analysis ──
+                const scenarios = [
+                    { label: '😟 Bi quan', factor: 0.80, color: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.3)' },
+                    { label: '📊 Cơ sở', factor: 1.00, color: '#2563eb', bg: 'rgba(37,99,235,0.08)', border: 'rgba(37,99,235,0.3)' },
+                    { label: '😊 Lạc quan', factor: 1.20, color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.3)' }
+                ];
+                let scenHtml = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">`;
+                scenarios.forEach(sc => {
+                    const adjFlows = flows.map((f, idx) => idx === 0 ? f : f * sc.factor);
+                    const sNpv = this.npv(adjFlows, dr);
+                    const sIrr = this.irr(adjFlows);
+                    let sPb = '> ' + (adjFlows.length - 1); let sCum = 0;
+                    for (let idx = 0; idx < adjFlows.length; idx++) {
+                        const prev = sCum; sCum += adjFlows[idx];
+                        if (sCum >= 0 && idx > 0) { sPb = (idx - 1 + (prev < 0 ? Math.abs(prev) / adjFlows[idx] : 0)).toFixed(1); break; }
+                    }
+                    const verdict = sNpv > 0 && (!isNaN(sIrr) && sIrr > dr) ? '✅ NÊN ĐẦU TƯ' : sNpv > 0 ? '⚠️ CÂN NHẮC' : '❌ KHÔNG NÊN';
+                    scenHtml += `
+                        <div style="border:1.5px solid ${sc.border};border-radius:16px;padding:18px;background:${sc.bg};text-align:center;">
+                            <div style="font-size:1.1rem;font-weight:800;color:${sc.color};margin-bottom:10px;">${sc.label}</div>
+                            <div style="font-size:0.7rem;color:var(--text-secondary);margin-bottom:2px;">Điều chỉnh dòng tiền</div>
+                            <div style="font-weight:700;margin-bottom:10px;">${sc.factor === 1 ? 'Gốc (100%)' : (sc.factor * 100).toFixed(0) + '%'}</div>
+                            <div style="background:var(--bg);border-radius:10px;padding:10px;margin-bottom:8px;">
+                                <div style="font-size:0.65rem;color:var(--text-secondary);margin-bottom:2px;">NPV</div>
+                                <div style="font-weight:800;color:${sNpv>=0?'var(--success)':'var(--danger)'};">${fmt(Math.round(sNpv))}</div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+                                <div style="background:var(--bg);border-radius:10px;padding:8px;">
+                                    <div style="font-size:0.6rem;color:var(--text-secondary);">IRR</div>
+                                    <div style="font-weight:700;font-size:0.85rem;">${isNaN(sIrr) ? 'N/A' : sIrr.toFixed(1) + '%'}</div>
+                                </div>
+                                <div style="background:var(--bg);border-radius:10px;padding:8px;">
+                                    <div style="font-size:0.6rem;color:var(--text-secondary);">Hoàn vốn</div>
+                                    <div style="font-weight:700;font-size:0.85rem;">${sPb} năm</div>
+                                </div>
+                            </div>
+                            <div style="font-size:0.8rem;font-weight:700;color:${sc.color};">${verdict}</div>
+                        </div>`;
+                });
+                scenHtml += '</div>';
+                const scenEl = document.getElementById('scenarioAnalysis');
+                if (scenEl) scenEl.innerHTML = scenHtml;
             },
 
             downloadCashflowTemplate() { const ws = XLSX.utils.aoa_to_sheet([["Year 0", "Year 1", "Year 2"], [-5e8, 1.5e8, 1.8e8]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Template"); XLSX.writeFile(wb, "Cashflow_Template.xlsx"); },
@@ -2275,6 +2950,7 @@
 
             // ==================== BANK COMPARISON ====================
             compareBankLoans() {
+                // When user selects/views a bank in Tab 3, update the interest rate used in IS
                 const la = this.parseNumber(document.getElementById('loanAmount')?.value);
                 const lt = parseInt(document.getElementById('loanTerm')?.value) || 120;
                 const mi = this.parseNumber(document.getElementById('monthlyIncome')?.value) || 5e7;
@@ -2427,6 +3103,12 @@
                         ltv: (loanType !== 'unsecured' && collateral > 0) ? (la / collateral) * 100 : null
                     };
                 }).sort((a, b) => b.totalScore - a.totalScore);
+
+                // Store best rate for IS interest calculation
+                if (scores.length > 0) {
+                    this.selectedBankRate = scores[0].interestRate;
+                    this.calcIS(); // Recalculate IS with updated interest rate
+                }
 
                 // ========== HIỂN THỊ KẾT QUẢ ==========
                 let html = '<div class="grid-2col">';
@@ -2700,6 +3382,7 @@
                 const icr = d.interestExpense > 0 ? (d.netProfit + d.interestExpense) / d.interestExpense : 999;  // ICR
                 const years = d.businessYears;  // Số năm hoạt động
                 const assets = d.assets / 1e9;  // Tổng tài sản (tỷ VND)
+                const employees = d.employeeCount;  // Số nhân viên (tích hợp vào đánh giá quy mô nhân lực)
 
                 // ========== HÀM CHUẨN HÓA TUYẾN TÍNH ==========
                 // Công thức: score = 10 × (value - min) / (max - min)
@@ -2764,15 +3447,26 @@
                 else experienceScore = 10;
                 experienceScore = Math.min(10, Math.max(0, experienceScore));
 
-                // 7. ĐIỂM QUY MÔ (Tổng tài sản, tỷ VND)
-                // Logarit cơ số 10: 1 tỷ → 2 điểm, 10 tỷ → 6 điểm, 100 tỷ → 9 điểm
-                let scaleScore;
-                if (assets <= 0.5) scaleScore = 1;
-                else if (assets <= 1) scaleScore = 2 + (assets - 0.5) / 0.5 * 2;  // 2-4 điểm
-                else if (assets <= 5) scaleScore = 4 + Math.log10(assets) * 2;  // 4-5.4 điểm
-                else if (assets <= 20) scaleScore = 5.4 + Math.log10(assets / 5) * 3;  // 5.4-7.2 điểm
-                else if (assets <= 100) scaleScore = 7.2 + Math.log10(assets / 20) * 2;  // 7.2-8.6 điểm
-                else scaleScore = Math.min(10, 8.6 + Math.log10(assets / 100) * 1.4);
+                // 7. ĐIỂM QUY MÔ (Kết hợp Tổng tài sản + Số nhân viên)
+                // Tài sản: logarit, nhân viên: tăng tuyến tính
+                let assetScaleScore;
+                if (assets <= 0.5) assetScaleScore = 1;
+                else if (assets <= 1) assetScaleScore = 2 + (assets - 0.5) / 0.5 * 2;
+                else if (assets <= 5) assetScaleScore = 4 + Math.log10(assets) * 2;
+                else if (assets <= 20) assetScaleScore = 5.4 + Math.log10(assets / 5) * 3;
+                else if (assets <= 100) assetScaleScore = 7.2 + Math.log10(assets / 20) * 2;
+                else assetScaleScore = Math.min(10, 8.6 + Math.log10(assets / 100) * 1.4);
+
+                // Điểm nhân lực: < 10 NV = 2đ, 10-50 = 5đ, 50-200 = 7đ, > 200 = 9đ, > 500 = 10đ
+                let staffScore;
+                if (employees <= 5) staffScore = 1;
+                else if (employees <= 10) staffScore = 2 + (employees - 5) / 5 * 2;
+                else if (employees <= 50) staffScore = 4 + (employees - 10) / 40 * 3;
+                else if (employees <= 200) staffScore = 7 + (employees - 50) / 150 * 2;
+                else staffScore = Math.min(10, 9 + (employees - 200) / 300);
+
+                // Quy mô tổng hợp: 70% tài sản + 30% nhân lực
+                let scaleScore = Math.min(10, Math.max(0, assetScaleScore * 0.7 + staffScore * 0.3));
                 scaleScore = Math.min(10, Math.max(0, scaleScore));
 
                 // ========== TRỌNG SỐ THEO NGÀNH (Có thể tùy chỉnh) ==========
@@ -2844,7 +3538,7 @@
                     '4. Hiệu quả TS (Asset Turnover)',
                     '5. Rủi ro lãi suất (ICR)',
                     '6. Kinh nghiệm (Năm hoạt động)',
-                    '7. Quy mô (Tổng tài sản)'
+                    '7. Quy mô (TS + Nhân lực)'
                 ];
 
                 const categoryScores = [
@@ -2872,7 +3566,7 @@
                 const actualValues = [
                     cr.toFixed(2), deR.toFixed(2), pm.toFixed(1) + '%',
                     at.toFixed(2), (icr >= 999 ? '∞' : icr.toFixed(1)),
-                    years + ' năm', assets.toFixed(1) + ' tỷ'
+                    years + ' năm', assets.toFixed(1) + 'tỷ / ' + employees + 'NV'
                 ];
 
                 for (let i = 0; i < categoryNames.length; i++) {
@@ -2999,6 +3693,78 @@
                         }
                     });
                 }
+
+                // ========== CẬP NHẬT GIAO DIỆN DUPONT ==========
+                const dupontROE = roe;
+                const dupontPM = pm;
+                const dupontAT = at;
+                const dupontEM = d.equity > 0 ? d.assets / d.equity : 0;
+
+                const dupontROEEl = document.getElementById('dupontROE');
+                const dupontPMEl = document.getElementById('dupontPM');
+                const dupontATEl = document.getElementById('dupontAT');
+                const dupontEMEl = document.getElementById('dupontEM');
+                const dupontExplEl = document.getElementById('dupontExplanation');
+
+                if (dupontROEEl) dupontROEEl.textContent = dupontROE.toFixed(2) + '%';
+                if (dupontPMEl) dupontPMEl.textContent = dupontPM.toFixed(2) + '%';
+                if (dupontATEl) dupontATEl.textContent = dupontAT.toFixed(3);
+                if (dupontEMEl) dupontEMEl.textContent = dupontEM.toFixed(3);
+
+                if (dupontExplEl) {
+                    let explanationText = '';
+                    if (this.lastAiDuPont && Math.abs(this.lastAiDuPont.roe - roe) < 5) {
+                        explanationText = `<strong>💡 Phân tích DuPont từ AI BCTC:</strong><br>${this.lastAiDuPont.explanation}`;
+                    } else {
+                        const isVi = this.currentLang === 'vi';
+                        if (isVi) {
+                            explanationText = `<strong>💡 Nhận xét mô hình DuPont:</strong><br>`;
+                            if (roe <= 0) {
+                                explanationText += `• Doanh nghiệp đang ghi nhận lợi nhuận âm (lỗ), dẫn tới hiệu quả sử dụng vốn chủ sở hữu (ROE) không có giá trị thực tế. Cần tối ưu chi phí giá vốn và chi phí vận hành để khôi phục biên lợi nhuận ròng.`;
+                            } else {
+                                explanationText += `• Tỷ suất sinh lời trên vốn CSH (ROE) đạt <strong>${roe.toFixed(2)}%</strong>.<br>`;
+                                if (pm > 15) {
+                                    explanationText += `• Biên lợi nhuận ròng tốt (<strong>${pm.toFixed(1)}%</strong>) là động lực chính thúc đẩy ROE, cho thấy sản phẩm có giá trị gia tăng cao hoặc quản lý chi phí hiệu quả.<br>`;
+                                } else {
+                                    explanationText += `• Biên lợi nhuận ròng ở mức trung bình/thấp (<strong>${pm.toFixed(1)}%</strong>). Doanh nghiệp cần xem xét tối ưu cơ cấu chi phí.<br>`;
+                                }
+                                if (at > 1.2) {
+                                    explanationText += `• Hiệu suất sử dụng tài sản cao (vòng quay đạt <strong>${at.toFixed(2)}</strong> lần), cho thấy năng lực bán hàng tốt và quay vòng vốn nhanh.<br>`;
+                                } else {
+                                    explanationText += `• Vòng quay tài sản thấp (<strong>${at.toFixed(2)}</strong> lần). Doanh nghiệp đang thâm dụng vốn hoặc hiệu quả sử dụng cơ sở vật chất, tài sản cố định chưa cao.<br>`;
+                                }
+                                if (dupontEM > 2.5) {
+                                    explanationText += `• Đòn bẩy tài chính cao (hệ số nhân vốn chủ <strong>${dupontEM.toFixed(2)}</strong>) giúp khuyếch đại tỷ suất sinh lời ROE nhưng đồng thời tăng rủi ro tài chính khi lãi suất biến động. Doanh nghiệp cần duy trì khả năng thanh toán nợ ổn định.`;
+                                } else {
+                                    explanationText += `• Đòn bẩy tài chính ở mức an toàn (hệ số nhân <strong>${dupontEM.toFixed(2)}</strong>), cơ cấu tài chính lành mạnh nhưng có thể cân nhắc sử dụng thêm nợ vay phù hợp để tối ưu hóa ROE.`;
+                                }
+                            }
+                        } else {
+                            explanationText = `<strong>💡 DuPont Decomposition Comment:</strong><br>`;
+                            if (roe <= 0) {
+                                explanationText += `• The business is recording a net loss, leading to a negative ROE. Focus on optimizing COGS and operating expenses to restore profitability.`;
+                            } else {
+                                explanationText += `• Return on Equity (ROE) is <strong>${roe.toFixed(2)}%</strong>.<br>`;
+                                if (pm > 15) {
+                                    explanationText += `• Solid Net Profit Margin (<strong>${pm.toFixed(1)}%</strong>) is the primary driver of ROE, showing strong pricing power or cost management.<br>`;
+                                } else {
+                                    explanationText += `• Net Profit Margin is moderate/low (<strong>${pm.toFixed(1)}%</strong>). Enterprise should focus on cost optimization.<br>`;
+                                }
+                                if (at > 1.2) {
+                                    explanationText += `• High asset efficiency (turnover of <strong>${at.toFixed(2)}</strong>), showing strong sales velocity.<br>`;
+                                } else {
+                                    explanationText += `• Asset turnover is low (<strong>${at.toFixed(2)}</strong>). Capital might be locked in slow-moving assets or under-utilized facilities.<br>`;
+                                }
+                                if (dupontEM > 2.5) {
+                                    explanationText += `• High financial leverage (multiplier of <strong>${dupontEM.toFixed(2)}</strong>) amplifies ROE but increases debt service risk. Ensure stable interest coverage.`;
+                                } else {
+                                    explanationText += `• Financial leverage is conservative (multiplier of <strong>${dupontEM.toFixed(2)}</strong>), indicating low risk but potential to leverage debt for optimal ROE.`;
+                                }
+                            }
+                        }
+                    }
+                    dupontExplEl.innerHTML = explanationText;
+                }
             },
             // ==================== THÊM HÀM PHÂN TÍCH ĐIỂM MẠNH/YẾU ====================
             getStrongestPoint(categoryNames, categoryScores) {
@@ -3116,8 +3882,532 @@
                 if (tid === 'tab7') this.updateFinancialStatus();
             },
 
+            // Selected bank rate for interest calculation
+            selectedBankRate: null,
+            lastAiDuPont: null,
+
+            // ==================== BCTC UPLOAD & PARSING ====================
+            async handleBCTCUpload(event) {
+                const file = event.target.files?.[0];
+                if (!file) return;
+
+                const container = document.getElementById('uploadStatusContainer');
+                const statusText = document.getElementById('uploadStatusText');
+                const statusDetail = document.getElementById('uploadStatusDetail');
+                const uploadZone = document.getElementById('bctcUploadZone');
+
+                if (container) container.style.display = 'block';
+                if (uploadZone) {
+                    uploadZone.style.pointerEvents = 'none';
+                    uploadZone.style.opacity = '0.5';
+                }
+
+                try {
+                    const isVi = this.currentLang === 'vi';
+                    statusText.textContent = isVi ? 'Đang đọc file...' : 'Reading file...';
+                    statusDetail.textContent = isVi ? 'Đang trích xuất dữ liệu thô...' : 'Extracting raw text...';
+
+                    let text = '';
+                    const extension = file.name.split('.').pop().toLowerCase();
+
+                    if (extension === 'pdf') {
+                        statusDetail.textContent = isVi ? 'Đang đọc tài liệu PDF (sử dụng thư viện PDF.js)...' : 'Reading PDF document (using PDF.js)...';
+                        text = await this.extractTextFromPDF(file);
+                    } else if (extension === 'xlsx') {
+                        statusDetail.textContent = isVi ? 'Đang đọc tài liệu Excel (sử dụng SheetJS)...' : 'Reading Excel sheet (using SheetJS)...';
+                        text = await this.extractTextFromExcel(file);
+                    } else {
+                        statusDetail.textContent = isVi ? 'Đang đọc tệp văn bản...' : 'Reading text file...';
+                        text = await this.extractTextFromTxt(file);
+                    }
+
+                    if (!text || text.trim().length === 0) {
+                        throw new Error(isVi ? 'Không trích xuất được văn bản nào từ file.' : 'Could not extract text from the file.');
+                    }
+
+                    statusText.textContent = isVi ? 'Đang phân tích bằng AI...' : 'Analyzing with AI...';
+                    statusDetail.textContent = isVi ? 'Đang gửi dữ liệu đến mô hình DeepSeek để chuẩn hóa BCTC...' : 'Sending data to DeepSeek to parse SME format...';
+
+                    // Call backend to parse BCTC
+                    const response = await fetch(`${API_URL}/ai/parse-bctc`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ text: text })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || (isVi ? 'Lỗi kết nối server phân tích.' : 'Server communication error.'));
+                    }
+
+                    const result = await response.json();
+                    if (!result.success || !result.data) {
+                        throw new Error(result.error || (isVi ? 'AI không phân tích được dữ liệu.' : 'AI failed to parse details.'));
+                    }
+
+                    // Fill values in form
+                    this.fillFinancialForm(result.data);
+
+                    statusText.textContent = isVi ? '✅ Phân tích thành công!' : '✅ Analysis successful!';
+                    statusDetail.textContent = isVi ? 'Đã điền các chỉ số tài chính và cập nhật biểu đồ.' : 'Financial numbers have been populated and charts updated.';
+
+                    // Show success status temporarily
+                    setTimeout(() => {
+                        if (container) container.style.display = 'none';
+                        if (uploadZone) {
+                            uploadZone.style.pointerEvents = 'auto';
+                            uploadZone.style.opacity = '1.0';
+                        }
+                    }, 5000);
+
+                } catch (err) {
+                    console.error('BCTC upload error:', err);
+                    statusText.textContent = this.currentLang === 'vi' ? '❌ Lỗi phân tích' : '❌ Analysis error';
+                    statusDetail.textContent = err.message;
+
+                    // Allow retry
+                    if (uploadZone) {
+                        uploadZone.style.pointerEvents = 'auto';
+                        uploadZone.style.opacity = '1.0';
+                    }
+                }
+            },
+
+            async extractTextFromPDF(file) {
+                const arrayBuffer = await file.arrayBuffer();
+                // Configure workerSrc
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let text = '';
+                const maxPages = Math.min(pdf.numPages, 12); // Limit to first 12 pages
+                for (let i = 1; i <= maxPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    const pageText = content.items.map(item => item.str).join(' ');
+                    text += `--- Trang ${i} ---\n` + pageText + '\n';
+                }
+                return text;
+            },
+
+            async extractTextFromExcel(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            let text = '';
+                            workbook.SheetNames.forEach(sheetName => {
+                                text += `--- Sheet: ${sheetName} ---\n`;
+                                const sheet = workbook.Sheets[sheetName];
+                                const csv = XLSX.utils.sheet_to_csv(sheet);
+                                text += csv + '\n';
+                            });
+                            resolve(text);
+                        } catch (err) {
+                            reject(err);
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
+            },
+
+            async extractTextFromTxt(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = (e) => reject(new Error('Cannot read text file'));
+                    reader.readAsText(file);
+                });
+            },
+
+            fillFinancialForm(data) {
+                const setVal = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el && val !== undefined && val !== null) {
+                        if (el.tagName === 'INPUT' && el.type === 'text') {
+                            el.value = Math.round(val).toLocaleString('en-US');
+                        } else {
+                            el.value = val;
+                        }
+                    }
+                };
+
+                if (data.companyName) setVal('companyName', data.companyName);
+                if (data.businessYears) setVal('businessYears', data.businessYears);
+                if (data.employeeCount) setVal('employeeCount', data.employeeCount);
+                if (data.totalAssets) setVal('totalAssets', data.totalAssets);
+                if (data.currentAssets) setVal('currentAssets', data.currentAssets);
+                if (data.debt) setVal('debt', data.debt);
+
+                // Monthly Income Statement items
+                if (data.monthlyRevenue) setVal('monthlyRevenue', data.monthlyRevenue);
+                if (data.monthlyCOGS) setVal('monthlyCOGS', data.monthlyCOGS);
+                if (data.monthlyOpex) setVal('monthlyOpex', data.monthlyOpex);
+                if (data.monthlyDepreciation) setVal('monthlyDepreciation', data.monthlyDepreciation);
+
+                // Loan options
+                if (data.loanAmount) setVal('loanAmount', data.loanAmount);
+                if (data.loanTerm) setVal('loanTerm', data.loanTerm);
+                if (data.collateralValue) setVal('collateralValue', data.collateralValue);
+
+                // Store DuPont AI analysis results if present
+                if (data.dupontAnalysis) {
+                    this.lastAiDuPont = data.dupontAnalysis;
+                } else {
+                    this.lastAiDuPont = null;
+                }
+
+                // Trigger calculation updates
+                this.calcIS();
+                this.syncData();
+                this.quickRiskAssessment();
+                this.fullRiskAssessment();
+            },
+
+            // ==================== PDF REPORT EXPORT ====================
+            async exportPDFReport() {
+                const isVi = this.currentLang === 'vi';
+                const statusToast = document.createElement('div');
+                statusToast.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#2563eb; color:white; padding:15px 25px; border-radius:12px; z-index:9999; font-weight:700; box-shadow:0 10px 30px rgba(0,0,0,0.2); font-family:sans-serif;';
+                statusToast.textContent = isVi ? '🔄 Đang tải phông chữ tiếng Việt và tạo báo cáo PDF...' : '🔄 Loading Vietnamese fonts and generating PDF...';
+                document.body.appendChild(statusToast);
+
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('p', 'mm', 'a4');
+
+                    // Load Vietnamese font (Roboto) to support accents properly
+                    try {
+                        const fontRegUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf';
+                        const fontBoldUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf';
+
+                        const [regRes, boldRes] = await Promise.all([
+                            fetch(fontRegUrl).then(r => r.blob()),
+                            fetch(fontBoldUrl).then(r => r.blob())
+                        ]);
+
+                        const regBase64 = await new Promise(resolve => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                            reader.readAsDataURL(regRes);
+                        });
+
+                        const boldBase64 = await new Promise(resolve => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                            reader.readAsDataURL(boldRes);
+                        });
+
+                        doc.addFileToVFS('Roboto-Regular.ttf', regBase64);
+                        doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
+
+                        doc.addFileToVFS('Roboto-Bold.ttf', boldBase64);
+                        doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold');
+
+                        doc.setFont('Roboto', 'normal');
+                    } catch (fontErr) {
+                        console.warn('CORS or network error fetching custom fonts, falling back to default Helvetica. Vietnamese accents might be garbled.', fontErr);
+                        doc.setFont('Helvetica', 'normal');
+                    }
+
+                    const d = this.getFinancialData();
+                    const cName = document.getElementById('companyName')?.value || 'Công ty SME';
+                    const industryVal = document.getElementById('industry')?.value || 'manufacturing';
+                    const industryText = isVi ? (industryVal === 'manufacturing' ? 'Sản xuất' : industryVal === 'trading' ? 'Thương mại' : industryVal === 'services' ? 'Dịch vụ' : 'Công nghệ') : industryVal;
+
+                    // --- PAGE 1: TITLE & BUSINESS PROFILE ---
+                    // Header Banner (Navy Blue)
+                    doc.setFillColor(37, 99, 235); // primary blue
+                    doc.rect(0, 0, 210, 40, 'F');
+
+                    // Title inside banner
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(20);
+                    const titleText = isVi ? 'BÁO CÁO PHÂN TÍCH TÀI CHÍNH DOANH NGHIỆP' : 'ENTERPRISE FINANCIAL ANALYSIS REPORT';
+                    doc.text(titleText, 15, 20);
+
+                    doc.setFont('Roboto', 'normal');
+                    doc.setFontSize(10);
+                    doc.text(isVi ? 'Phân tích tự động bởi Financial Analyzer Lite' : 'Powered by Financial Analyzer Lite', 15, 30);
+                    const dateStr = new Date().toLocaleDateString(isVi ? 'vi-VN' : 'en-US');
+                    doc.text(`${isVi ? 'Ngày lập' : 'Date'}: ${dateStr}`, 160, 30);
+
+                    // Reset Text Color to dark slate
+                    doc.setTextColor(15, 23, 42);
+
+                    // Company Info Section
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(14);
+                    doc.text(isVi ? '1. THÔNG TIN DOANH NGHIỆP' : '1. COMPANY PROFILE', 15, 52);
+                    doc.setLineWidth(0.5);
+                    doc.setDrawColor(226, 232, 240);
+                    doc.line(15, 55, 195, 55);
+
+                    doc.setFont('Roboto', 'normal');
+                    doc.setFontSize(10);
+
+                    let yOffset = 62;
+                    doc.text(`${isVi ? 'Tên doanh nghiệp' : 'Company Name'}: ${cName}`, 15, yOffset);
+                    doc.text(`${isVi ? 'Ngành nghề' : 'Industry'}: ${industryText}`, 15, yOffset + 7);
+                    doc.text(`${isVi ? 'Số năm hoạt động' : 'Years in Business'}: ${d.businessYears} ${isVi ? 'năm' : 'years'}`, 110, yOffset);
+                    doc.text(`${isVi ? 'Số lượng nhân viên' : 'Employee Count'}: ${d.employeeCount} ${isVi ? 'người' : 'staff'}`, 110, yOffset + 7);
+
+                    // Balance sheet table
+                    yOffset += 18;
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(12);
+                    doc.text(isVi ? 'Bảng cân đối kế toán rút gọn (Balance Sheet)' : 'Balance Sheet Summary', 15, yOffset);
+
+                    const bsHeaders = [[isVi ? 'Chỉ tiêu tài sản' : 'Asset Items', isVi ? 'Giá trị (VND)' : 'Value (VND)', isVi ? 'Cơ cấu (%)' : 'Structure (%)']];
+                    const eqVal = Math.max(0, d.assets - d.debt);
+                    const bsRows = [
+                        [isVi ? 'Tài sản ngắn hạn' : 'Current Assets', d.currentAssets.toLocaleString('en-US') + 'đ', d.assets > 0 ? ((d.currentAssets / d.assets) * 100).toFixed(1) + '%' : '0%'],
+                        [isVi ? 'Tài sản cố định' : 'Fixed Assets', d.fixedAssets.toLocaleString('en-US') + 'đ', d.assets > 0 ? ((d.fixedAssets / d.assets) * 100).toFixed(1) + '%' : '0%'],
+                        [isVi ? 'TỔNG TÀI SẢN' : 'TOTAL ASSETS', d.assets.toLocaleString('en-US') + 'đ', '100.0%'],
+                        [isVi ? 'Nợ phải trả (Tổng nợ)' : 'Total Liabilities (Debt)', d.debt.toLocaleString('en-US') + 'đ', d.assets > 0 ? ((d.debt / d.assets) * 100).toFixed(1) + '%' : '0%'],
+                        [isVi ? 'Vốn chủ sở hữu (Equity)' : 'Equity', eqVal.toLocaleString('en-US') + 'đ', d.assets > 0 ? ((eqVal / d.assets) * 100).toFixed(1) + '%' : '0%']
+                    ];
+
+                    doc.autoTable({
+                        startY: yOffset + 4,
+                        head: bsHeaders,
+                        body: bsRows,
+                        theme: 'striped',
+                        styles: { font: 'Roboto', fontSize: 9 },
+                        headStyles: { fillColor: [59, 130, 246] }
+                    });
+
+                    // Income statement table
+                    yOffset = doc.lastAutoTable.finalY + 12;
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(12);
+                    doc.text(isVi ? 'Báo cáo Kết quả Kinh doanh hàng tháng (Income Statement)' : 'Monthly Income Statement', 15, yOffset);
+
+                    const monthlyRev = this.parseNumber(document.getElementById('monthlyRevenue')?.value) || 0;
+                    const monthlyCOGS = this.parseNumber(document.getElementById('monthlyCOGS')?.value) || 0;
+                    const monthlyOpex = this.parseNumber(document.getElementById('monthlyOpex')?.value) || 0;
+                    const monthlyDep = this.parseNumber(document.getElementById('monthlyDepreciation')?.value) || 0;
+                    const monthlyInterest = this.getMonthlyInterestFromLoan();
+                    const ebt = monthlyRev - monthlyCOGS - monthlyOpex - monthlyDep - monthlyInterest;
+                    const tax = ebt > 0 ? ebt * 0.20 : 0;
+                    const monthlyNet = ebt - tax;
+
+                    const isHeaders = [[isVi ? 'Chỉ tiêu Doanh thu / Chi phí tháng' : 'Revenue / Expense Items', isVi ? 'Giá trị tháng (VND)' : 'Monthly Value (VND)', isVi ? 'Giá trị quy năm (VND)' : 'Annual Value (VND)']];
+                    const isRows = [
+                        [isVi ? 'Doanh thu thuần' : 'Revenue', monthlyRev.toLocaleString('en-US') + 'đ', (monthlyRev * 12).toLocaleString('en-US') + 'đ'],
+                        [isVi ? 'Giá vốn hàng bán (COGS)' : 'Cost of Goods Sold (COGS)', monthlyCOGS.toLocaleString('en-US') + 'đ', (monthlyCOGS * 12).toLocaleString('en-US') + 'đ'],
+                        [isVi ? 'Chi phí hoạt động (Opex)' : 'Operating Expenses (Opex)', monthlyOpex.toLocaleString('en-US') + 'đ', (monthlyOpex * 12).toLocaleString('en-US') + 'đ'],
+                        [isVi ? 'Khấu hao tài sản cố định' : 'Depreciation', monthlyDep.toLocaleString('en-US') + 'đ', (monthlyDep * 12).toLocaleString('en-US') + 'đ'],
+                        [isVi ? 'Chi phí lãi vay phát sinh' : 'Interest Expense', monthlyInterest.toLocaleString('en-US') + 'đ', (monthlyInterest * 12).toLocaleString('en-US') + 'đ'],
+                        [isVi ? 'Lợi nhuận trước thuế (EBT)' : 'Earnings Before Tax (EBT)', ebt.toLocaleString('en-US') + 'đ', (ebt * 12).toLocaleString('en-US') + 'đ'],
+                        [isVi ? 'Thuế thu nhập doanh nghiệp (20%)' : 'Income Tax (20%)', tax.toLocaleString('en-US') + 'đ', (tax * 12).toLocaleString('en-US') + 'đ'],
+                        [isVi ? 'LỢI NHUẬN RÒNG SAU THUẾ' : 'NET PROFIT', monthlyNet.toLocaleString('en-US') + 'đ', (monthlyNet * 12).toLocaleString('en-US') + 'đ']
+                    ];
+
+                    doc.autoTable({
+                        startY: yOffset + 4,
+                        head: isHeaders,
+                        body: isRows,
+                        theme: 'grid',
+                        styles: { font: 'Roboto', fontSize: 8.5 },
+                        headStyles: { fillColor: [16, 185, 129] }
+                    });
+
+                    // --- PAGE 2: RISK ASSESSMENT & RATIOS ---
+                    doc.addPage();
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(14);
+                    doc.text(isVi ? '2. ĐÁNH GIÁ RỦI RO & CHỈ SỐ SỨC KHỎE TÀI CHÍNH' : '2. RISK ASSESSMENT & FINANCIAL HEALTH', 15, 20);
+                    doc.line(15, 23, 195, 23);
+
+                    // Risk level
+                    const totalScoreVal = parseFloat(document.getElementById('totalRiskScore')?.textContent) || 0;
+                    const levelText = document.getElementById('totalRiskLevel')?.innerText || '';
+                    doc.setFontSize(12);
+                    doc.text(`${isVi ? 'Điểm đánh giá rủi ro chuyên sâu' : 'Comprehensive Risk Score'}: ${totalScoreVal.toFixed(1)}/100`, 15, 32);
+                    doc.setFont('Roboto', 'normal');
+                    doc.setFontSize(10);
+                    doc.text(`${isVi ? 'Phân loại rủi ro' : 'Risk Classification'}: ${levelText.replace('\n', ' - ')}`, 15, 38);
+
+                    // financial ratios table
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(12);
+                    doc.text(isVi ? 'Hệ thống chỉ số tài chính cơ bản' : 'Key Financial Ratios', 15, 48);
+
+                    const deR = d.equity > 0 ? d.debt / d.equity : 0;
+                    const roa = d.assets > 0 ? ((d.netProfit) / d.assets) * 100 : 0;
+                    const roe = d.equity > 0 ? ((d.netProfit) / d.equity) * 100 : 0;
+                    const pm = d.revenue > 0 ? ((d.netProfit) / d.revenue) * 100 : 0;
+                    const at = d.assets > 0 ? d.revenue / d.assets : 0;
+                    const cr = d.debt > 0 ? d.currentAssets / (d.debt * 0.5) : 0;
+                    const icr = d.interestExpense > 0 ? (d.netProfit + d.interestExpense) / d.interestExpense : 999;
+
+                    const ratioHeaders = [[isVi ? 'Chỉ số tài chính' : 'Financial Ratio', isVi ? 'Giá trị' : 'Value', isVi ? 'Ngưỡng an toàn (SME)' : 'Benchmark (SME)', isVi ? 'Đánh giá' : 'Status']];
+                    const ratioRows = [
+                        [isVi ? 'Khả năng thanh toán (Current Ratio)' : 'Current Ratio', cr.toFixed(2), '1.5 - 2.5', cr >= 1.5 ? (isVi ? 'Tốt' : 'Good') : (isVi ? 'Yếu' : 'Weak')],
+                        [isVi ? 'Hệ số nợ/vốn CSH (D/E Ratio)' : 'Debt-to-Equity (D/E)', deR.toFixed(2), '0.5 - 1.5', deR <= 1.5 ? (isVi ? 'An toàn' : 'Safe') : (isVi ? 'Rủi ro' : 'Risky')],
+                        [isVi ? 'Khả năng trả lãi (ICR)' : 'Interest Coverage (ICR)', icr > 999 ? '∞' : icr.toFixed(1), '> 2.0', icr >= 2.0 ? (isVi ? 'Tốt' : 'Good') : (isVi ? 'Cảnh báo' : 'Warning')],
+                        [isVi ? 'Biên lợi nhuận ròng (Net Margin)' : 'Profit Margin', pm.toFixed(1) + '%', '> 5.0%', pm >= 5.0 ? (isVi ? 'Hiệu quả' : 'Profitable') : (isVi ? 'Thấp' : 'Low')],
+                        [isVi ? 'Vòng quay tài sản (Asset Turnover)' : 'Asset Turnover', at.toFixed(2), '> 1.0', at >= 1.0 ? (isVi ? 'Hiệu quả' : 'Efficient') : (isVi ? 'Chậm' : 'Slow')],
+                        [isVi ? 'Khả năng sinh lời tài sản (ROA)' : 'Return on Assets (ROA)', roa.toFixed(1) + '%', '> 6.0%', roa >= 6.0 ? (isVi ? 'Tốt' : 'Good') : (isVi ? 'Thấp' : 'Low')],
+                        [isVi ? 'Tỷ suất sinh lời vốn CSH (ROE)' : 'Return on Equity (ROE)', roe.toFixed(1) + '%', '> 12.0%', roe >= 12.0 ? (isVi ? 'Tốt' : 'Good') : (isVi ? 'Thấp' : 'Low')]
+                    ];
+
+                    doc.autoTable({
+                        startY: 52,
+                        head: ratioHeaders,
+                        body: ratioRows,
+                        theme: 'striped',
+                        styles: { font: 'Roboto', fontSize: 9 },
+                        headStyles: { fillColor: [37, 99, 235] }
+                    });
+
+                    // DuPont Section on Page 2
+                    yOffset = doc.lastAutoTable.finalY + 12;
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(12);
+                    doc.text(isVi ? 'Mô hình phân rã ROE (DuPont Decomposition)' : 'DuPont ROE Decomposition', 15, yOffset);
+
+                    const em = d.equity > 0 ? d.assets / d.equity : 0;
+                    doc.setFont('Roboto', 'normal');
+                    doc.setFontSize(10);
+
+                    const dupontLine = `ROE (${roe.toFixed(2)}%) = Biên LN ròng (${pm.toFixed(1)}%) x Vòng quay tài sản (${at.toFixed(2)}) x Hệ số nhân vốn CSH (${em.toFixed(2)})`;
+                    doc.text(dupontLine, 15, yOffset + 6);
+
+                    const dupontDesc = document.getElementById('dupontExplanation')?.innerText || '';
+                    if (dupontDesc) {
+                        doc.setFontSize(9);
+                        doc.setFont('Roboto', 'normal');
+                        const splitText = doc.splitTextToSize(dupontDesc, 180);
+                        doc.text(splitText, 15, yOffset + 14);
+                        yOffset += (splitText.length * 4.5);
+                    }
+
+                    // Warnings & recommendations
+                    yOffset = yOffset + 18;
+                    if (yOffset > 250) { doc.addPage(); yOffset = 20; }
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(12);
+                    doc.text(isVi ? 'Cảnh báo sớm & Khuyến nghị hành động' : 'Early Warnings & Recommendations', 15, yOffset);
+                    doc.line(15, yOffset + 2, 195, yOffset + 2);
+
+                    const warnText = document.getElementById('earlyWarnings')?.innerText || (isVi ? 'Không có cảnh báo đặc biệt.' : 'No warnings.');
+                    const recText = document.getElementById('actionRecommendations')?.innerText || (isVi ? 'Tiếp tục duy trì hoạt động.' : 'Maintain current status.');
+
+                    doc.setFont('Roboto', 'normal');
+                    doc.setFontSize(9);
+
+                    let splitWarn = doc.splitTextToSize(warnText, 85);
+                    let splitRec = doc.splitTextToSize(recText, 85);
+
+                    doc.text(isVi ? '⚠️ CẢNH BÁO SỚM' : '⚠️ WARNINGS', 15, yOffset + 8);
+                    doc.text(splitWarn, 15, yOffset + 14);
+
+                    doc.text(isVi ? '🎯 KHUYẾN NGHỊ' : '🎯 RECOMMENDATIONS', 110, yOffset + 8);
+                    doc.text(splitRec, 110, yOffset + 14);
+
+                    // --- PAGE 3: LOANS & INVESTMENT & RECOMMENDATION ---
+                    doc.addPage();
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(14);
+                    doc.text(isVi ? '3. SO SÁNH GÓI VAY & PHÂN TÍCH ĐẦU TƯ DỰ ÁN' : '3. LOAN COMPARISON & INVESTMENT DECISION', 15, 20);
+                    doc.line(15, 23, 195, 23);
+
+                    // Top bank loans
+                    doc.setFontSize(12);
+                    doc.text(isVi ? 'Gợi ý các gói vay phù hợp (Top ngân hàng)' : 'Best Matching Loan Packages', 15, 32);
+
+                    const loanAmountVal = this.parseNumber(document.getElementById('loanAmount')?.value);
+                    const loanTermVal = parseInt(document.getElementById('loanTerm')?.value) || 120;
+
+                    let topLoans = [];
+                    if (this.BANK_DATABASE && this.BANK_DATABASE.length > 0) {
+                        topLoans = this.BANK_DATABASE.map(b => {
+                            const pmt = this.calculatePMT(b.interestRate / 100 / 12, loanTermVal, loanAmountVal);
+                            let fitScore = 100 - (b.interestRate * 4);
+                            if (fitScore < 0) fitScore = 30;
+                            return { ...b, pmt, fitScore: Math.round(fitScore) };
+                        }).sort((a, b) => b.fitScore - a.fitScore).slice(0, 3);
+                    }
+
+                    const loanHeaders = [[isVi ? 'Ngân hàng' : 'Bank', isVi ? 'Gói vay' : 'Package', isVi ? 'Lãi suất/năm' : 'Rate/yr', isVi ? 'Gốc + Lãi tháng' : 'Monthly Payment', isVi ? 'Đánh giá phù hợp' : 'Match Score']];
+                    const loanRows = topLoans.map(b => [
+                        b.name,
+                        b.packageName,
+                        b.interestRate.toFixed(1) + '%',
+                        Math.round(b.pmt).toLocaleString('en-US') + 'đ',
+                        b.fitScore + '/100'
+                    ]);
+
+                    doc.autoTable({
+                        startY: 36,
+                        head: loanHeaders,
+                        body: loanRows.length > 0 ? loanRows : [[isVi ? 'Chưa nhập số tiền vay để so sánh' : 'No loan data', '', '', '', '']],
+                        theme: 'striped',
+                        styles: { font: 'Roboto', fontSize: 9 },
+                        headStyles: { fillColor: [59, 130, 246] }
+                    });
+
+                    // Project Investment NPV & IRR
+                    yOffset = doc.lastAutoTable.finalY + 12;
+                    doc.setFont('Roboto', 'bold');
+                    doc.setFontSize(12);
+                    doc.text(isVi ? 'Đánh giá dự án đầu tư (NPV & IRR)' : 'Investment Project Evaluation (NPV & IRR)', 15, yOffset);
+
+                    const cashflowsVal = document.getElementById('cashflows')?.value || '';
+                    const discountRateVal = document.getElementById('discountRate')?.value || '10';
+                    const npvVal = document.getElementById('npvValue')?.textContent || '--';
+                    const irrVal = document.getElementById('irrValue')?.textContent || '--';
+                    const paybackVal = document.getElementById('paybackPeriod')?.textContent || '--';
+                    const investInsightVal = document.getElementById('investmentInsight')?.innerText || '';
+
+                    doc.setFont('Roboto', 'normal');
+                    doc.setFontSize(9.5);
+                    doc.text(`${isVi ? 'Dòng tiền dự án' : 'Cashflows'}: [${cashflowsVal}]`, 15, yOffset + 6);
+                    doc.text(`${isVi ? 'Lãi suất chiết khấu áp dụng' : 'Discount Rate'}: ${discountRateVal}%/năm`, 15, yOffset + 12);
+
+                    doc.text(`NPV: ${npvVal}`, 15, yOffset + 20);
+                    doc.text(`IRR: ${irrVal}`, 70, yOffset + 20);
+                    doc.text(`${isVi ? 'Thời gian hoàn vốn' : 'Payback Period'}: ${paybackVal} ${isVi ? 'năm' : 'years'}`, 120, yOffset + 20);
+
+                    if (investInsightVal) {
+                        doc.setFont('Roboto', 'bold');
+                        doc.text(`${isVi ? 'Khuyến nghị dự án' : 'Project Advice'}: ${investInsightVal.replace('\n', ' - ')}`, 15, yOffset + 28);
+                    }
+
+                    // Disclaimer & Signatures
+                    yOffset = yOffset + 45;
+                    if (yOffset > 260) { doc.addPage(); yOffset = 30; }
+                    doc.setFont('Roboto', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(100, 116, 139);
+                    const disclaimerText = isVi ?
+                        '* Lưu ý: Báo cáo này được tự động tạo dựa trên số liệu do người dùng cung cấp và lãi suất ngân hàng hiện hành. Kết quả phân tích mang tính chất tham khảo học thuật và hỗ trợ ra quyết định tài chính sơ bộ, không thay thế cho quyết định phê duyệt cấp tín dụng chính thức của các ngân hàng thương mại.' :
+                        '* Note: This report is automatically generated based on user input and current bank rates. The analysis results are for reference and academic purposes only, and do not constitute official credit approval from commercial banks.';
+                    const splitDisc = doc.splitTextToSize(disclaimerText, 180);
+                    doc.text(splitDisc, 15, yOffset);
+
+                    // Save document
+                    doc.save(`Bao_Cao_Tai_Chinh_${cName.replace(/\s+/g, '_')}.pdf`);
+
+                    // Remove toast
+                    statusToast.textContent = isVi ? '✅ Đã tải file PDF!' : '✅ PDF downloaded!';
+                    setTimeout(() => statusToast.remove(), 3000);
+
+                } catch (err) {
+                    console.error('PDF generation error:', err);
+                    statusToast.textContent = isVi ? '❌ Lỗi tạo PDF!' : '❌ PDF generation error!';
+                    setTimeout(() => statusToast.remove(), 4000);
+                }
+            },
+
             initApp() {
-                console.log('✅ Initializing...');
+                console.log('✅ Initializing Financial Analyzer Lite...');
                 if (this.isDark) document.body.classList.add('dark');
                 document.getElementById('langLabel').textContent = this.currentLang === 'vi' ? 'Tiếng Việt' : 'English';
                 document.getElementById('themeLabel').textContent = this.currentLang === 'vi' ? (this.isDark ? 'Sáng' : 'Tối') : (this.isDark ? 'Light' : 'Dark');
@@ -3138,7 +4428,8 @@
                 window.addEventListener('click', e => { if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none'; });
                 this.applyTranslations();
                 this.refreshMacroData();
-                this.syncData();
+                // Run IS calculation first to populate hidden fields
+                this.calcIS();
                 this.calculateNpvIrr();
                 this.compareBankLoans();
                 this.updateBankListDisplay();
@@ -3147,7 +4438,7 @@
                 this.fullRiskAssessment();
                 this.updateFinancialStatus();
                 this.quickRiskAssessment();
-                console.log('✅ Ready.');
+                console.log('✅ Financial Analyzer Lite Ready.');
             }
         };
 
