@@ -1,0 +1,27 @@
+calculateNpvIrr() {
+    const text = document.getElementById('cashflows')?.value || '';
+    const flows = text.split(/[,\n]/).map(v => parseFloat(v.trim().replace(/[^0-9-]/g, ''))).filter(v => !isNaN(v));
+    if (!flows.length) return;
+    
+    const dr = parseFloat(document.getElementById('discountRate')?.value) || 10;
+    const n = this.npv(flows, dr);
+    const i = this.irr(flows);
+    
+    document.getElementById('npvValue').innerHTML = n.toLocaleString('en-US') + ' VND';
+    document.getElementById('irrValue').innerHTML = (isNaN(i) ? 'N/A' : i.toFixed(2)) + ' %';
+    
+    let pb = '> ' + flows.length, cum = 0;
+    for (let idx = 0; idx < flows.length; idx++) {
+        cum += flows[idx];
+        if (cum >= 0) {
+            pb = (idx + (cum - flows[idx]) / flows[idx]).toFixed(1);
+            break;
+        }
+    }
+    document.getElementById('paybackPeriod').innerHTML = pb;
+    
+    const insight = !isNaN(i) && i > dr && n > 0 ? '✅ NÊN ĐẦU TƯ' : 
+                    n > 0 ? '⚠️ CÂN NHẮC' : '❌ KHÔNG NÊN';
+    document.getElementById('investmentInsight').innerHTML = 
+        `<div class="insight-box"><strong>${insight}</strong><br>IRR=${isNaN(i) ? 'N/A' : i.toFixed(2)+'%'} vs ${dr}%</div>`;
+}
