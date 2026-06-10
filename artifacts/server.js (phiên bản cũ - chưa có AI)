@@ -1,0 +1,32 @@
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// Dữ liệu mẫu
+const BANK_DATA = {
+    vietcombank: { name: 'Vietcombank', packages: [{ name: 'Vay sản xuất kinh doanh', rate: 7.5, term: '12 tháng' }] },
+    bidv: { name: 'BIDV', packages: [{ name: 'Vay ngắn hạn', rate: 6.5, term: '12 tháng' }] }
+};
+
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/banks', (req, res) => {
+    res.json({ success: true, data: BANK_DATA });
+});
+
+app.get('/api/banks/:bankName', (req, res) => {
+    const bank = BANK_DATA[req.params.bankName.toLowerCase()];
+    if (bank) res.json({ success: true, data: bank });
+    else res.status(404).json({ success: false, error: 'Bank not found' });
+});
+
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+});
