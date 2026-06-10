@@ -1,0 +1,17 @@
+quickRiskAssessment() {
+    this.syncData();
+    const deText = document.getElementById('deValue2')?.innerHTML || 'N/A';
+    const icrText = document.getElementById('icrValue2')?.innerHTML || 'N/A';
+    const pmText = document.getElementById('profitMarginValue')?.innerHTML || 'N/A';
+    
+    const de = parseFloat(deText) || 0;
+    const icr = icrText === '∞' ? 999 : parseFloat(icrText) || 0;
+    const pm = parseFloat(pmText) || 0;
+    
+    let risk = (de < 2 && icr > 3 && pm > 10) ? '🟢 LOW RISK' : 
+               (de < 3 && icr > 1.5 && pm > 5) ? '🟡 MEDIUM RISK' : 
+               '🔴 HIGH RISK';
+    
+    document.getElementById('quickRiskResult').innerHTML = 
+        `<strong>RESULT:</strong> ${risk}<br>D/E=${de.toFixed(2)} | ICR=${icr === 999 ? '∞' : icr.toFixed(1)} | Margin=${pm.toFixed(1)}%`;
+}
