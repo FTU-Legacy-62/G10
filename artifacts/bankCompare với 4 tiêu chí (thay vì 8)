@@ -1,0 +1,21 @@
+compareBankLoans() {
+    const la = this.parseNumber(document.getElementById('loanAmount')?.value);
+    const lt = parseInt(document.getElementById('loanTerm')?.value) || 120;
+    const mi = this.parseNumber(document.getElementById('monthlyIncome')?.value) || 5e7;
+    const d = this.getFinancialData();
+    const deR = d.equity > 0 ? d.debt / d.equity : 999;
+    
+    const scores = this.BANK_DATABASE.map(b => {
+        let s = 0;
+        s += Math.max(0, 25 * (1 - (b.interestRate - 4) / 15));  // Lãi suất
+        s += la >= b.minLoan && la <= b.maxLoan ? 10 : 5;        // Hạn mức
+        s += lt <= b.maxTerm ? 10 : Math.max(0, (b.maxTerm / lt) * 10); // Thời hạn
+        const ep = this.calculatePMT(b.interestRate / 100 / 12, lt, la);
+        s += ep <= mi * 0.5 ? 20 : 20 * (1 - (ep - mi * 0.5) / (mi * 0.5)); // Khả năng trả nợ
+        s += deR < 2 ? 10 : (deR < 3 ? 7 : (deR < 4 ? 4 : 2)); // Đòn bẩy DN
+        s += mi >= b.minIncome ? 5 : Math.max(0, (mi / b.minIncome) * 5); // Thu nhập
+        return { ...b, totalScore: Math.min(Math.round(s), 100), estimatedPayment: ep };
+    }).sort((a, b) => b.totalScore - a.totalScore);
+    
+    // Hiển thị kết quả...
+}
