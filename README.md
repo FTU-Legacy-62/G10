@@ -1,68 +1,68 @@
 # Financial Analyzer
 
-## Mã nhóm
+## Group
 
 G10
 
-## Thành viên
+## Members
 
-| Họ tên | Mã sinh viên | Vai trò chính |
+| Full Name | Student ID | Primary Role |
 |---|---|---|
-| Đạt |2312380006 | Backend API, Database, Deploy, Risk Scoring, DeepSeek AI |
-| Huy |2312380011 | BaseScraper Engine, BIDV Scraper, Database |
-| Tuấn |2312380088 | UI/UX, Financial Engine, Dashboard, AI Consultant |
-| Phước |2312380026 | Web Scraper VPBank + Vietcombank |
-| Quang |2312380029 | Web Scraper MBBank + Techcombank, Tích hợp scraper |
+| Đạt | 2312380006 | Backend API, Database, Deploy, Risk Scoring, DeepSeek AI |
+| Huy | 2312380011 | BaseScraper Engine, BIDV Scraper, Database |
+| Tuấn | 2312380088 | UI/UX, Financial Engine, Dashboard, AI Consultant |
+| Phước | 2312380026 | Web Scraper VPBank + Vietcombank |
+| Quang | 2312380029 | Web Scraper MBBank + Techcombank, Scraper Integration |
 
-## Mô tả ngắn về sản phẩm
+## Product Overview
 
-Financial Analyzer là nền tảng phân tích tài chính doanh nghiệp dành cho các doanh nghiệp vừa và nhỏ (SME) tại Việt Nam. Sản phẩm giúp doanh nghiệp tự động tính toán các chỉ số tài chính quan trọng như ROE, ROA, D/E, ICR, đánh giá rủi ro tín dụng, so sánh các gói vay ngân hàng theo 8 tiêu chí với hệ thống chấm điểm thông minh, và nhận tư vấn từ AI. Ngoài ra, sản phẩm còn hỗ trợ phân tích đầu tư dự án qua NPV, IRR và phân tích độ nhạy, cũng như phân tích ROE theo mô hình DuPont 3 nhân tố.
+Financial Analyzer is a business financial analysis platform designed for small and medium-sized enterprises (SMEs) in Vietnam. The product helps businesses automatically calculate key financial indicators such as ROE, ROA, D/E, and ICR; assess credit risk; compare bank loan packages across 8 criteria using an intelligent scoring system; and receive AI-powered advisory. It also supports project investment analysis via NPV, IRR, and sensitivity analysis, as well as ROE breakdown using the 3-factor DuPont model.
 
-## Vấn đề sản phẩm giải quyết
+## Problem the Product Solves
 
-**Sản phẩm giải quyết vấn đề gì?**  
-Các doanh nghiệp SME tại Việt Nam gặp khó trong việc tự đánh giá sức khỏe tài chính, so sánh các gói vay ngân hàng, và ra quyết định vay do thông tin về các gói vay thường không tập trung và khó tìm kiếm.
+**What problem does it solve?**  
+SMEs in Vietnam struggle to self-assess their financial health, compare bank loan packages, and make informed borrowing decisions due to fragmented and hard-to-find loan information.
 
-**Ai đang gặp vấn đề này?**  
-Chủ doanh nghiệp vừa và nhỏ, các chuyên viên tài chính tại các SME chưa có công cụ phân tích chuyên nghiệp.
+**Who faces this problem?**  
+SME owners and in-house finance staff at small and medium-sized enterprises who lack access to professional analysis tools.
 
-**Vì sao vấn đề này đáng quan tâm?**  
-Theo thống kê, SME chiếm hơn 90% số lượng doanh nghiệp tại Việt Nam và đóng góp lớn vào GDP. Khả năng tiếp cận tín dụng hiệu quả là yếu tố sống còn cho sự phát triển của nhóm doanh nghiệp này. Một công cụ phân tích tài chính toàn diện, dễ sử dụng sẽ giúp SME ra quyết định vay vốn chính xác hơn, giảm thiểu rủi ro tài chính.
+**Why does this problem matter?**  
+Statistics show that SMEs account for over 90% of all businesses in Vietnam and contribute significantly to GDP. Effective access to credit is a critical factor for this group's growth and survival. A comprehensive, easy-to-use financial analysis tool will help SMEs make more accurate borrowing decisions and minimize financial risk.
 
-## Người dùng mục tiêu
+## Target Users
 
-**Người dùng chính của sản phẩm là ai?**  
-Chủ doanh nghiệp SME và chuyên viên tài chính tại các doanh nghiệp vừa và nhỏ. Ngoài ra các hộ kinh doanh cũng là người dùng tiềm năng của sản phâme này.
+**Who are the primary users?**  
+SME owners and finance staff at small and medium-sized enterprises. Household business operators are also potential users of this product.
 
-**Họ dùng sản phẩm trong tình huống nào?**  
-- Khi cần đánh giá sức khỏe tài chính của doanh nghiệp trước khi vay vốn.
-- Khi muốn so sánh các gói vay từ nhiều ngân hàng để chọn gói phù hợp nhất.
-- Khi cần phân tích hiệu quả của một dự án đầu tư.
-- Khi muốn hiểu rõ các chỉ số tài chính và rủi ro của doanh nghiệp.
+**In what situations do they use it?**  
+- When assessing the financial health of their business before applying for a loan.
+- When comparing loan packages from multiple banks to find the best fit.
+- When analyzing the viability of an investment project.
+- When seeking a clearer understanding of their financial ratios and business risks.
 
-## Tính năng chính
+## Key Features
 
-- **Đánh giá rủi ro nhanh (Quick Risk):** Tính toán 8 chỉ số tài chính cốt lõi (CR, D/E, ICR, PM, ATO, ROA, ROE, DSCR) với benchmark theo ngành, chấm điểm và phân loại rủi ro 5 cấp độ kèm cảnh báo.
-- **Đánh giá rủi ro chuyên sâu (Deep Risk):** Phân tích 7 chiều rủi ro (thanh khoản, đòn bẩy, sinh lời, hiệu quả TS, rủi ro lãi suất, kinh nghiệm, quy mô) với biểu đồ radar trực quan.
-- **So sánh gói vay ngân hàng (8 tiêu chí):** Chấm điểm và xếp hạng các gói vay dựa trên lãi suất, khả năng trả nợ, hạn mức, thời hạn, LTV, đòn bẩy DN, thu nhập và phí xử lý.
-- **Phân tích đầu tư NPV/IRR:** Tính NPV, IRR, thời gian hoàn vốn, kèm phân tích độ nhạy (14 mức lãi suất) và phân tích kịch bản (bi quan, cơ sở, lạc quan).
-- **Dashboard trực quan:** Biểu đồ cơ cấu tài sản, cơ cấu nguồn vốn, xu hướng lợi nhuận, dòng tiền và lịch trả nợ.
-- **Phân tích DuPont:** Phân rã ROE thành 3 nhân tố: Biên lợi nhuận ròng × Vòng quay tài sản × Hệ số nhân vốn.
-- **AI Consultant:** Trợ lý ảo tư vấn tài chính (tích hợp DeepSeek API).
-- **Xuất báo cáo PDF:** Tự động xuất báo cáo phân tích tài chính toàn diện.
+- **Quick Risk Assessment:** Calculates 8 core financial indicators (CR, D/E, ICR, PM, ATO, ROA, ROE, DSCR) with industry benchmarks, scores them, and classifies risk into 5 levels with specific warnings.
+- **Deep Risk Assessment:** Analyzes 7 risk dimensions (liquidity, leverage, profitability, asset efficiency, interest rate risk, experience, scale) with an intuitive radar chart.
+- **Bank Loan Comparison (8 Criteria):** Scores and ranks loan packages based on interest rate, repayment capacity, credit limit, loan term, LTV, business leverage, income requirement, and processing fee.
+- **NPV/IRR Investment Analysis:** Calculates NPV, IRR, and payback period, with sensitivity analysis (14 interest rate levels) and scenario analysis (pessimistic, base, optimistic).
+- **Visual Dashboard:** Charts for asset structure, capital structure, profit trends, cash flow, and repayment schedule.
+- **DuPont Analysis:** Breaks down ROE into 3 factors: Net Profit Margin × Asset Turnover × Equity Multiplier.
+- **AI Consultant:** A virtual financial advisory assistant (integrated with DeepSeek API).
+- **PDF Report Export:** Automatically generates a comprehensive financial analysis report.
 
-## Link demo
-**Link web:** *https://financial-analyzer-ooel.onrender.com*
+## Demo Link
+**Web:** *https://financial-analyzer-ooel.onrender.com*
 
-## Ghi chú về dữ liệu nếu có
+## Data Notes
 
-- **Dữ liệu ngân hàng:** Dữ liệu mẫu được nhúng sẵn trong code (6 gói vay từ Vietcombank, BIDV, Techcombank, VPBank, Sacombank). Có thể cập nhật thủ công qua tab "Admin DB" hoặc thông qua web scraper.
-- **Dữ liệu vĩ mô:** Lấy từ API công khai của World Bank (GDP, lạm phát), SBV (Lãi suất tái cấp vốn) và ExchangeRate-API (tỷ giá USD/VND).
-- **Dữ liệu doanh nghiệp:** Do người dùng nhập trực tiếp vào form.
-- **AI Consultant:** Tích hợp API DeepSeek (yêu cầu API Key để hoạt động).
+- **Bank data:** Sample data is embedded directly in the code (6 loan packages from Vietcombank, BIDV, Techcombank, VPBank, Sacombank). Can be updated manually via the "Admin DB" tab or through the web scraper.
+- **Macroeconomic data:** Fetched from public APIs — World Bank (GDP, inflation), SBV (refinancing interest rate), and ExchangeRate-API (USD/VND exchange rate).
+- **Business data:** Entered directly by the user via input forms.
+- **AI Consultant:** Integrated with the DeepSeek API (requires an API Key to function).
 
-## Ghi chú thêm
+## Additional Notes
 
-- Sản phẩm hỗ trợ chuyển đổi giao diện sáng/tối và song ngữ Việt - Anh.
-- Có thể xuất báo cáo PDF kết quả phân tích bằng nút "Xuất PDF" trên thanh điều hướng.
-- Tab "Admin DB" chỉ hiển thị khi bật chế độ Dev (nhấn nút Dev và nhập mật khẩu `admin123`).
+- The product supports light/dark mode toggle and bilingual interface (Vietnamese – English).
+- Analysis results can be exported as a PDF report using the "Export PDF" button on the navigation bar.
+- The "Admin DB" tab is only visible when Dev mode is enabled (click the Dev button and enter the password `admin123`).
