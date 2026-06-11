@@ -290,7 +290,7 @@ API integration, and deployment.
     > lesson is to deploy early and treat production parity as something
     > to maintain continuously, not fix at the end.
 
-**[VIII. CHALLENGES AND HOW I HANDLED THEM]{.underline}**
+**VIII. CHALLENGES AND HOW I HANDLED THEM**
 
 **1. DeepSeek API timeout**
 
