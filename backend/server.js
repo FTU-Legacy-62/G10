@@ -155,15 +155,17 @@ app.post('/api/loans/reset', (req, res) => {
 
 // Khởi tạo database
 initDatabase();
-// ==================== AI CONSULTANT WITH DEEPSEEK API ====================
+
+// ==================== AI CONSULTANT WITH DEEPSEEK API (CÓ CONTEXT) ====================
 
 /**
  * API: AI Chat với DeepSeek
  * POST /api/ai/chat
- * Body: { message: "câu hỏi của người dùng" }
+ * Body: { message: "câu hỏi", financialData: { ... } }
  */
 app.post('/api/ai/chat', async (req, res) => {
     const userMessage = req.body.message;
+    const financialData = req.body.financialData; // Nhận context từ frontend
 
     if (!userMessage) {
         return res.status(400).json({
@@ -172,18 +174,43 @@ app.post('/api/ai/chat', async (req, res) => {
         });
     }
 
-    // System prompt - định nghĩa vai trò của AI
+    // === TẠO CONTEXT TỪ DỮ LIỆU DOANH NGHIỆP ===
+    let contextPrompt = '';
+    if (financialData) {
+        contextPrompt = `
+=== DỮ LIỆU DOANH NGHIỆP CỦA BẠN ===
+- Tổng tài sản: ${financialData.assets?.toLocaleString('en-US') || 'N/A'} VND
+- Tổng nợ: ${financialData.debt?.toLocaleString('en-US') || 'N/A'} VND
+- Vốn chủ sở hữu: ${financialData.equity?.toLocaleString('en-US') || 'N/A'} VND
+- Doanh thu năm: ${financialData.revenue?.toLocaleString('en-US') || 'N/A'} VND
+- Lợi nhuận sau thuế: ${financialData.netProfit?.toLocaleString('en-US') || 'N/A'} VND
+- Chi phí lãi vay: ${financialData.interestExpense?.toLocaleString('en-US') || 'N/A'} VND
+- Thu nhập tháng: ${financialData.monthlyIncome?.toLocaleString('en-US') || 'N/A'} VND
+- Số năm hoạt động: ${financialData.businessYears || 'N/A'} năm
+- Tỷ lệ D/E: ${financialData.deRatio ? financialData.deRatio.toFixed(2) : 'N/A'}
+- ROE: ${financialData.roe ? financialData.roe.toFixed(1) + '%' : 'N/A'}
+- ROA: ${financialData.roa ? financialData.roa.toFixed(1) + '%' : 'N/A'}
+- ICR: ${financialData.icr ? (financialData.icr > 999 ? '∞' : financialData.icr.toFixed(1)) : 'N/A'}
+- Biên lợi nhuận: ${financialData.profitMargin ? financialData.profitMargin.toFixed(1) + '%' : 'N/A'}
+`;
+    }
+
     const systemPrompt = `Bạn là "Financial Analyzer Pro AI", một chuyên gia tư vấn tài chính cho doanh nghiệp vừa và nhỏ (SME) tại Việt Nam.
 
-Nhiệm vụ của bạn:
-1. Trả lời các câu hỏi về tài chính doanh nghiệp, vay vốn ngân hàng, quản lý rủi ro, dòng tiền.
-2. Đưa ra lời khuyên thực tế, dễ hiểu, phù hợp với bối cảnh Việt Nam.
-3. Trả lời bằng tiếng Việt, giọng chuyên nghiệp, thân thiện.
+${contextPrompt}
 
-Hãy trả lời câu hỏi của người dùng một cách hữu ích và chính xác.`;
+Nhiệm vụ của bạn:
+1. DỰA VÀO DỮ LIỆU DOANH NGHIỆP ĐÃ CÓ Ở TRÊN để trả lời câu hỏi. KHÔNG HỎI LẠI những thông tin đã có.
+2. Trả lời các câu hỏi về tài chính doanh nghiệp, vay vốn ngân hàng, quản lý rủi ro, dòng tiền.
+3. Đưa ra lời khuyên thực tế, dễ hiểu, phù hợp với bối cảnh Việt Nam.
+4. Trả lời bằng tiếng Việt, giọng chuyên nghiệp, thân thiện.
+
+Ví dụ: Nếu D/E của doanh nghiệp là 2.5, hãy nói "D/E của bạn đang ở mức 2.5, cao hơn ngưỡng an toàn 1.5. Bạn nên cân nhắc giảm nợ hoặc tăng vốn chủ sở hữu trước khi vay thêm."
+Nếu ROE của doanh nghiệp là 8%, hãy phân tích: "ROE của bạn là 8%, thấp hơn mức trung bình ngành (12%). Nguyên nhân có thể đến từ biên lợi nhuận thấp hoặc vòng quay tài sản chậm."`;
 
     try {
         console.log(`🤖 Gọi DeepSeek API với câu hỏi: ${userMessage.substring(0, 100)}...`);
+        console.log(`📊 Context: ${contextPrompt ? 'Đã có dữ liệu doanh nghiệp' : 'Không có context'}`);
 
         const response = await axios.post(
             'https://api.deepseek.com/v1/chat/completions',
@@ -286,15 +313,13 @@ Hãy trích xuất và trả về đúng một đối tượng JSON có cấu tr
 }
 
 Lưu ý quan trọng:
-- Nếu văn bản ghi chép các số liệu theo năm (ví dụ: Doanh thu năm = 12 tỷ), hãy chia cho 12 để có số liệu tháng (Doanh thu tháng = 1 tỷ), do form nhập của hệ thống thiết kế theo tháng.
-- Nếu không tìm thấy số liệu cụ thể nào, hãy dùng suy luận tài chính hợp lý để ước lượng hoặc tính toán dựa trên các số liệu khác (ví dụ: Vốn CSH = Tổng tài sản - Tổng nợ). Nếu hoàn toàn không thể có số liệu đó, trả về giá trị mặc định của form hoặc null.
-- Hãy cố gắng chuẩn hóa các tên gọi tiếng Việt (ví dụ: "Doanh thu bán hàng và cung cấp dịch vụ", "Doanh thu thuần" -> doanh thu; "Giá vốn hàng bán" -> COGS; "Chi phí quản lý doanh nghiệp + Chi phí bán hàng" -> Opex).
-- Đảm bảo JSON đầu ra hợp lệ và chỉ chứa chuỗi JSON đó mà không chứa ký tự nào khác.`;
+- Nếu văn bản ghi chép các số liệu theo năm (ví dụ: Doanh thu năm = 12 tỷ), hãy chia cho 12 để có số liệu tháng.
+- Nếu không tìm thấy số liệu cụ thể nào, hãy dùng suy luận tài chính hợp lý để ước lượng.
+- Đảm bảo JSON đầu ra hợp lệ và chỉ chứa chuỗi JSON đó.`;
 
     try {
         console.log(`🤖 Đang dùng DeepSeek để phân tách BCTC (${text.length} ký tự)...`);
         
-        // Cắt bớt văn bản nếu quá dài để tránh quá tải token
         const truncatedText = text.substring(0, 25000);
 
         const response = await axios.post(
@@ -345,7 +370,7 @@ Lưu ý quan trọng:
     }
 });
 
-// Hàm fallback trích xuất dữ liệu bằng keyword matching khi không có API Key hoặc gọi API lỗi
+// Hàm fallback trích xuất dữ liệu bằng keyword matching
 function fallbackParseBCTC(text) {
     const data = {
         companyName: "Công ty TNHH BCTC Trích Xuất (Fallback)",
@@ -447,7 +472,6 @@ function fallbackParseBCTC(text) {
     return data;
 }
 
-
 /**
  * API: Kiểm tra trạng thái AI
  * GET /api/ai/status
@@ -460,6 +484,7 @@ app.get('/api/ai/status', (req, res) => {
         message: hasApiKey ? 'AI Consultant sẵn sàng' : 'Chưa cấu hình API Key'
     });
 });
+
 // Chạy server
 app.listen(PORT, () => {
     console.log(`🚀 Server chạy tại http://localhost:${PORT}`);
