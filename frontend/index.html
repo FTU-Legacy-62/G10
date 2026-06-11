@@ -2573,7 +2573,7 @@
                     at: { min: 1.0, desc: "> 1.0 lần (Hiệu suất tài sản)" },
                     roa: { min: 6.0, desc: "> 6.0% (Sinh lời trên tài sản)" },
                     roe: { min: 12.0, desc: "> 12.0% (Sinh lời trên vốn CSH)" },
-                    dscr: { min: 1.25, desc: "> 1.25 lần (Trả nợ - TT 11/2021)" }
+                    dscr: { min: 1.25, desc: "> 1.25 lần (Trả nợ)" }
                 };
 
                 if (industry === 'trading') {
@@ -3801,61 +3801,82 @@
                 document.getElementById('strategicAdvice').innerHTML = `<div class="insight-box">${advice}</div>`;
             },
 
-            sendConsultantMessage() {
-                const input = document.getElementById('consultantInput');
-                const message = input?.value?.trim();
+sendConsultantMessage() {
+    const input = document.getElementById('consultantInput');
+    const message = input?.value?.trim();
 
-                if (!message) return;
+    if (!message) return;
 
-                const chat = document.getElementById('consultantChat');
-                if (!chat) return;
+    const chat = document.getElementById('consultantChat');
+    if (!chat) return;
 
-                // Hiển thị tin nhắn người dùng
-                chat.innerHTML += `<div class="message user-message">${this.escapeHtml(message)}</div>`;
-                input.value = '';
-                chat.scrollTop = chat.scrollHeight;
+    // Lấy dữ liệu doanh nghiệp hiện tại
+    const d = this.getFinancialData();
+    const financialData = {
+        assets: d.assets,
+        debt: d.debt,
+        equity: d.equity,
+        revenue: d.revenue,
+        netProfit: d.netProfit,
+        interestExpense: d.interestExpense,
+        depreciation: d.depreciation,
+        monthlyIncome: d.monthlyIncome,
+        businessYears: d.businessYears,
+        employeeCount: d.employeeCount,
+        deRatio: d.equity > 0 ? d.debt / d.equity : null,
+        roe: d.equity > 0 ? (d.netProfit / d.equity) * 100 : null,
+        roa: d.assets > 0 ? (d.netProfit / d.assets) * 100 : null,
+        icr: d.interestExpense > 0 ? (d.netProfit + d.interestExpense) / d.interestExpense : null,
+        profitMargin: d.revenue > 0 ? (d.netProfit / d.revenue) * 100 : null
+    };
 
-                // Hiển thị loading
-                const loadingId = 'loading_' + Date.now();
-                chat.innerHTML += `<div class="message ai-message" id="${loadingId}">
+    // Hiển thị tin nhắn người dùng
+    chat.innerHTML += `<div class="message user-message">${this.escapeHtml(message)}</div>`;
+    input.value = '';
+    chat.scrollTop = chat.scrollHeight;
+
+    // Hiển thị loading
+    const loadingId = 'loading_' + Date.now();
+    chat.innerHTML += `<div class="message ai-message" id="${loadingId}">
         <div class="typing-indicator">
             <div class="typing-dot"></div>
             <div class="typing-dot"></div>
             <div class="typing-dot"></div>
         </div>
     </div>`;
-                chat.scrollTop = chat.scrollHeight;
+    chat.scrollTop = chat.scrollHeight;
 
-                // Gọi API DeepSeek qua backend
-                fetch(`${API_URL}/ai/chat`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: message })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const loadingEl = document.getElementById(loadingId);
-                        if (loadingEl) loadingEl.remove();
+    // Gọi API DeepSeek với dữ liệu doanh nghiệp
+    fetch(`${API_URL}/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            message: message,
+            financialData: financialData  // ← THÊM DÒNG NÀY
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const loadingEl = document.getElementById(loadingId);
+        if (loadingEl) loadingEl.remove();
 
-                        let reply = data.reply || "Xin lỗi, tôi chưa hiểu câu hỏi của bạn.";
-                        reply = reply.replace(/\n/g, '<br>');
+        let reply = data.reply || "Xin lỗi, tôi chưa hiểu câu hỏi của bạn.";
+        reply = reply.replace(/\n/g, '<br>');
 
-                        chat.innerHTML += `<div class="message ai-message">🤖 ${reply}</div>`;
-                        chat.scrollTop = chat.scrollHeight;
-                    })
-                    .catch(error => {
-                        console.error('Chat error:', error);
-                        const loadingEl = document.getElementById(loadingId);
-                        if (loadingEl) loadingEl.remove();
+        chat.innerHTML += `<div class="message ai-message">🤖 ${reply}</div>`;
+        chat.scrollTop = chat.scrollHeight;
+    })
+    .catch(error => {
+        console.error('Chat error:', error);
+        const loadingEl = document.getElementById(loadingId);
+        if (loadingEl) loadingEl.remove();
 
-                        chat.innerHTML += `<div class="message ai-message">
+        chat.innerHTML += `<div class="message ai-message">
             ⚠️ Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau.
         </div>`;
-                        chat.scrollTop = chat.scrollHeight;
-                    });
-            },
+        chat.scrollTop = chat.scrollHeight;
+    });
+},
 
             // Thêm hàm escapeHtml để tránh lỗi XSS
             escapeHtml(text) {
