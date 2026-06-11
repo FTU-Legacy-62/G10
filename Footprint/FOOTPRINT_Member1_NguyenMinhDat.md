@@ -1,6 +1,6 @@
 # INDIVIDUAL FOOTPRINT – Team 10 (G10)
 
-**Financial Analyzer Pro** – Automated financial health assessment & bank loan comparison platform for Vietnamese SMEs
+**Financial Analyzer** – Automated financial health assessment & bank loan comparison platform for Vietnamese SMEs
 
 **Course:** NHA408E – Technology Applications in Finance & Banking  
 **Academic year:** 2025–2026
@@ -95,4 +95,4 @@ The backend is the layer everything else depends on. Without the API server, the
 - **Validate scoring weights with someone from a bank** – textbook knowledge is only a starting point; real credit officers can tell you what weights actually make sense.
 ---
 
-*Team 10 (G10) – Financial Analyzer Pro – NHA408E – 2025–2026 – FTU Hanoi*
+*Team 10 (G10) – Financial Analyzer – NHA408E – 2025–2026 – FTU*
