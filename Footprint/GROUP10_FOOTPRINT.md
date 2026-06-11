@@ -1,8 +1,8 @@
-# GROUP FOOTPRINT – Financial Analyzer Pro
+# GROUP FOOTPRINT – Financial Analyzer
 
 **NHA408E · Technology Applications in Finance & Banking**  
 **Học kỳ:** 2025 – 2026 · **Nhóm:** Team 10 (G10)  
-**Thành viên:** Đạt (Backend/DevOps) · Huy (Database/Scraper) · Tuấn (Frontend/UI) · Phước (VCB/VPB Scraper) · Quang (MBB/TCB Scraper)  
+**Thành viên:** Đạt (Backend/DevOps) · Huy (Database/BaseScraper/BIDV Scraper) · Tuấn (Frontend/UI) · Phước (VCB/VPB Scraper) · Quang (MBB/TCB Scraper)  
 
 **Liên kết:**  
 - Repo: [https://github.com/FTU-Legacy-62/G10](https://github.com/FTU-Legacy-62/G10)  
@@ -12,9 +12,9 @@
 
 ## 1. Tên sản phẩm & Nhóm
 
-**Financial Analyzer Pro** – Hệ thống web hỗ trợ SMEs đánh giá sức khỏe tài chính và so sánh gói vay ngân hàng tự động.
+**Financial Analyzer** – Hệ thống web hỗ trợ SMEs đánh giá sức khỏe tài chính và so sánh gói vay ngân hàng tự động.
 
-Nhóm gồm 5 thành viên, phân công rõ ràng theo tầng kiến trúc: frontend, backend, database/scraper, và chuyên trách từng ngân hàng.
+Nhóm gồm 5 thành viên, phân công rõ ràng theo cấu trúc: frontend, backend, database/scraper, và chuyên trách từng ngân hàng.
 
 ---
 
@@ -24,24 +24,24 @@ SME chiếm >97% doanh nghiệp Việt Nam, nhưng khi cần vay vốn họ gặ
 
 1. **Không tự đánh giá được sức khỏe tài chính** (ROE, ROA, D/E, ICR so với ngưỡng an toàn).
 2. **Thông tin lãi suất phân tán**, khó so sánh giữa các ngân hàng.
-3. **Phải liên hệ trực tiếp** từng ngân hàng → tốn thời gian, áp lực bán hàng.
-4. **Thiếu công cụ phân tích rủi ro** tự động theo chuẩn tín dụng.
+3. **Phải liên hệ trực tiếp** từng ngân hàng → tốn thời gian, áp lực thời gian.
+4. **Thiếu công cụ phân tích rủi ro** tự động theo các tiêu chuẩn.
 5. **Quyết định vay dựa trên cảm tính** → chọn gói không tối ưu hoặc vay quá khả năng.
 
-**Bối cảnh:** Thị trường tín dụng SME tăng trưởng mạnh nhưng thiếu minh bạch. Lãi suất biến động theo NHNN, các gói ưu đãi phức tạp, chủ SME thường không có nền tảng tài chính bài bản.
+**Bối cảnh:** Thị trường tín dụng dành cho SME tăng trưởng mạnh nhưng thiếu minh bạch. Lãi suất biến động theo NHNN, các gói ưu đãi phức tạp, chủ SME thường không có nền tảng tài chính bài bản.
 
-**Ai bị ảnh hưởng?** Chủ doanh nghiệp SME và quản lý tài chính – những người cần quyết định vay vốn nhưng không có thời gian/chuyên môn phân tích sâu.
+**Ai bị ảnh hưởng?** Chủ doanh nghiệp SME và hộ kinh doanh – những người cần quyết định vay vốn nhưng không có thời gian/chuyên môn phân tích sâu.
 
 ---
 
 ## 3. Người dùng mục tiêu
 
-**Persona chính:** Chủ doanh nghiệp SME / Quản lý tài chính tại Việt Nam  
+**Persona chính:** Chủ doanh nghiệp SME / hộ kinh doanh tại Việt Nam  
 - Doanh thu 1–50 tỷ/năm  
-- Có kiến thức kinh doanh nhưng không chuyên về tài chính ngân hàng  
+- Có kiến thức kinh doanh nhưng không có chuyên môn về tài chính ngân hàng  
 - Cần biết: có đủ điều kiện vay không? vay được bao nhiêu? chọn ngân hàng/gói nào tốt nhất?  
 
-**Tình huống sử dụng:** Truy cập web, nhập số liệu từ báo cáo tài chính, nhận kết quả phân tích và so sánh trong vài phút – trước khi gặp nhân viên ngân hàng.
+**Quy trình sử dụng:** Truy cập web, nhập số liệu từ báo cáo tài chính, nhận kết quả phân tích và so sánh trong vài phút – trước khi gặp nhân viên ngân hàng.
 
 ---
 
@@ -61,7 +61,7 @@ SME chiếm >97% doanh nghiệp Việt Nam, nhưng khi cần vay vốn họ gặ
 
 ## 5. Input
 
-- **Dữ liệu doanh nghiệp:** tổng tài sản, nợ, doanh thu, lợi nhuận, chi phí lãi vay, số năm hoạt động, tài sản đảm bảo… (có thể upload PDF/Excel để AI tự điền)
+- **Dữ liệu doanh nghiệp:** tổng tài sản, nợ, doanh thu, lợi nhuận, chi phí lãi vay, số năm hoạt động, tài sản đảm bảo… (có thể upload PDF/Excel để auto paste)
 - **Dữ liệu gói vay:** 5 ngân hàng (VCB, BIDV, TCB, VPB, Sacombank) – lãi suất, hạn mức, kỳ hạn, LTV, yêu cầu thu nhập, phí xử lý.
 - **Dữ liệu vĩ mô:** GDP, lạm phát, tỷ giá, lãi suất điều hành NHNN.
 
@@ -94,12 +94,31 @@ SME chiếm >97% doanh nghiệp Việt Nam, nhưng khi cần vay vốn họ gặ
 - 60-79: Low – ổn định  
 - 40-59: Medium – rủi ro trung bình  
 - 20-39: High – rủi ro cao  
-- <20: Very High – rất khó vay  
-
+- <20: Very High – rất khó vay
+  
+| Chỉ số | Trọng số |	Cách tính |
+|----------|----------|------------|
+| Current Ratio |	15%	| ≥1.5→15đ, 1.0-1.5→10đ, >2.5→8đ, <1.0→3đ |
+| D/E Ratio |	15% |	≤1.5→15đ, 1.5-2.5→10đ, 2.5-3.5→5đ, >3.5→0đ|
+| ICR |	10% |	≥2.0→10đ, 1.5-2.0→6đ, <1.5→0đ |
+| Profit Margin |	15% |	≥5%→15đ, 2.5-5%→10đ, <2.5%→3đ |
+| Asset Turnover | 10% |≥1.0→10đ, 0.6-1.0→6đ, <0.6→2đ |
+| ROA |	10% |	≥6%→10đ, 3-6%→6đ, <3%→0đ |
+| ROE |	15% |	≥12%→15đ, 6-12%→10đ, <6%→3đ |
+| DSCR |	10% |	≥1.25→10đ, 1.0-1.25→6đ, <1.0→0đ |
 ### 6.4 Deep Risk 7 chiều (0-10 mỗi chiều)
 Thanh khoản, đòn bẩy, sinh lời, hiệu quả, rủi ro lãi vay, kinh nghiệm, quy mô.  
 Tổng điểm = (Tổng 7 chiều / 70) × 100, hiển thị radar chart.
 
+| Yếu tố | Công thức |
+|----------|------------|
+| Thanh khoản |	CR≤0.5→1đ, 0.5-1.2→2-5đ, 1.2-2.0→5-9đ, 2.0-3.0→9-6đ |
+| Đòn bẩy |	D/E≤0.5→8-10đ, 0.5-2.0→8-4đ, 2.0-3.5→4-1đ |
+| Sinh lời |	PM≤0→0đ, 0-5%→0-3đ, 5-10%→3-7đ, 10-20%→7-10đ |
+| Hiệu quả TS |	AT≤0.3→1đ, 0.3-0.8→1-5đ, 0.8-1.5→5-10đ |
+| Rủi ro lãi suất |	ICR<1.5→0-2đ, 1.5-3.0→2-5đ, 3.0-5.0→5-8đ, >5→8-10đ |
+| Kinh nghiệm |	Năm≤2→2-5đ, 2-5→5-8đ, 5-10→8-10đ |
+| Quy mô	Kết hợp | 70% tài sản (log) + 30% nhân lực |
 ---
 
 ## 7. User Flow (luồng chính)
@@ -113,8 +132,7 @@ Tổng điểm = (Tổng 7 chiều / 70) × 100, hiển thị radar chart.
 7. Xem bảng so sánh ngân hàng – Best Match được highlight  
 8. Điều chỉnh số tiền/kỳ hạn để xem tác động  
 9. Hỏi AI tư vấn thêm  
-10. (Tuỳ chọn) Tính NPV/IRR cho dự án cụ thể  
-
+10. (Tuỳ chọn) Tính 
 ---
 
 ## 8. Output
@@ -134,50 +152,46 @@ Tổng điểm = (Tổng 7 chiều / 70) × 100, hiển thị radar chart.
 | Quyết định | Lý do |
 |------------|-------|
 | Chọn SME làm người dùng | Phân khúc nhu cầu lớn nhất nhưng được phục vụ kém nhất |
-| Backend (Node.js) + frontend (HTML/JS thuần) tách biệt | Các thành viên làm việc độc lập, không block nhau |
+| Backend (Node.js) + frontend (HTML/JS thuần) tách biệt | Các thành viên làm việc độc lập, tránh delay |
 | Dùng file JSON thay vì database thật | Tập trung vào logic tài chính & UI trong phạm vi học thuật |
-| Chọn DeepSeek API (miễn phí) | Phù hợp dự án học thuật, tiếng Việt tốt, chi phí thấp |
-| Bỏ web scraping live trong MVP | Tránh bị block bởi anti-bot, đảm bảo demo ổn định |
-
+| Chọn DeepSeek API (miễn phí) |Chi phí token không quá cao, xử lý được các tác vụ ở mức thông thường ổn định |
 ---
 
 ## 10. Điểm làm tốt
 
-✅ **Thuật toán scoring 8 tiêu chí có chiều sâu** – trọng số 25/20/10/… phản ánh đúng cách ngân hàng đánh giá SME.  
-✅ **Deep Risk 7 chiều + radar chart** – khác biệt so với các tool miễn phí khác.  
-✅ **Phân công theo tầng kiến trúc** – 5 thành viên làm song song, ít phụ thuộc chéo.  
-✅ **Deploy sớm, luôn sẵn sàng** – URL public chạy trên Render, ai cũng test được không cần cài đặt.
+✅ **Thuật toán scoring 8 tiêu chí** – trọng số 25/20/10/… phản ánh được phần nào cách các bank đánh giá SME trước khi cho vay
+✅ **Deep Risk 7 thành phần + radar chart** – cho user thấy công ty đang gặp rủi ro gì và rủi ro nào chiếm trọng số lớn nhất
+✅ **Phân công theo cấu trúc file** – 5 thành viên làm song song, ít phụ thuộc chéo.  
+✅ **Auto-Deploy latest committ qua render.com** – URL public chạy trên Render, mỗi khi sửa file trong github là tự động deploy lại luôn
 
 ---
 
 ## 11. Hạn chế hiện tại
 
-⚠ Web scraper chưa ổn định (dễ bị block) – đang dùng fallback data tĩnh.  
+⚠ Web scraper chưa ổn định (dễ bị block) – đang dùng fallback data tĩnh. (Đã cải thiện được ở 4 bank: VCB, BIDV, MBB, VPB; còn TCB và STB thì vẫn còn chưa parse được)
 ⚠ Database là file JSON – không scale, dễ xảy ra write collision.  
-⚠ Mobile responsiveness chưa tối ưu – bảng và chart bị tràn trên điện thoại.  
 ⚠ Chưa có authentication – mọi người dùng chung database, không lưu lịch sử.  
 ⚠ AI Consultant chưa có context từ kết quả phân tích – chỉ trả lời câu hỏi đơn thuần.
-
+⚠ Nối API với các nguồn dữ liệu vĩ mô đôi khi vẫn thất bại (chủ yếu là khi lấy data từ SBV)
 ---
 
 ## 12. Điều nhóm học được
 
 - **Xác định đúng vấn đề khó hơn viết code** – từ “tool so sánh lãi suất” chuyển thành “khung đánh giá sức khỏe tài chính cho SME”.  
-- **Phân công theo tầng kiến trúc** giảm conflict, tăng tốc độ phát triển.  
-- **Công thức tài chính dễ, nhưng trọng số & ngưỡng mới khó** – cần validate với người trong ngành.  
-- **Deploy sớm để phát hiện lỗi môi trường** – biến môi trường, CORS, cold start, đường dẫn Windows/Linux.  
-- **Quản lý thời gian:** AI và web scraper tốn nhiều thời gian hơn dự kiến → phải tạm hoãn scraper để kịp MVP.
-
+- **Phân công theo cấu trúc** giảm sự xung đột, tăng tốc độ làm khi mỗi người đảm nhận các modules khác nhau.  
+- **Công thức tài chính dễ, nhưng trọng số & benchmark mới là vấn đề** – cần validate lại khá kĩ càng, test với nhiều trọng số khác nhau để cho ra bộ trọng số phù hợp nhất 
+- **Deploy sớm để phát hiện các vấn đề về environment variables, command, lộ key API,vv** – biến môi trường, CORS, cold start, đường dẫn Windows/Linux.  
+- **Quản lý thời gian:** AI và web scraper tốn nhiều thời gian hơn dự kiến → chưa kịp update bản scraper mới nhất vào web khi deploy lỗi + scrape quá phức tạp
 ---
 
 ## 13. Gợi ý cho khóa sau
 
-💌 **Bắt đầu từ bài toán, không từ công nghệ** – đừng hỏi “dùng React hay Vue?” mà hãy hỏi “SME cần gì khi đi vay?”.  
-💌 **Deploy từ tuần đầu tiên** – dù chỉ một API đơn giản cũng deploy ngay.  
-💌 **Validate thuật toán với người trong ngành** – sách giáo khoa chỉ là điểm xuất phát.  
+💌 **Bắt đầu từ bài toán, không từ công nghệ** –  hãy tư duy từ user trước, xem họ cần gì và có thể cung cấp gì. 
+💌 **Deploy từ sớm** – nên deploy web càng sớm càng tốt để biết những vấn đề trong quá trình vận hành như over-traffic, lượng user sử dụng cùng lúc quá nhiều gây lag website, thậm chí sập.  
+💌 **Validate logic** – công thức tài chính dễ dàng nhưng scoring thì khó, cấn test nhiều bộ số để cho ra bộ hợp lý nhất.
 💌 **Nâng cấp database trước khi thêm tính năng** – JSON chỉ dùng cho prototype.  
 💌 **Tính năng AI sẽ mạnh hơn nếu có context** – truyền kết quả risk/scoring vào system prompt.
 
 ---
 
-*Group 10 – Financial Analyzer Pro – NHA408E – 2025–2026 – FTU Hà Nội*
+*Group 10 – Financial Analyzer – NHA408E – 2025–2026 – FTU*
