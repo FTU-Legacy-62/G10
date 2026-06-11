@@ -28,7 +28,7 @@
 
 *Hanoi, 2026*
 
-**[I. ROLE IN THE PROJECT]{.underline}**
+**I. ROLE IN THE PROJECT**
 
 In Team 10, I was responsible for the backend and DevOps side of the
 project. That basically means I built and maintained everything between
@@ -54,7 +54,7 @@ Concretely, I owned 4 areas:
 4.  Deploying everything to Render with environment variables, health
     checks, and uptime monitoring.
 
-**[II. PERSONAL MARK IN THE PRODUCT]{.underline}**
+**II. PERSONAL MARK IN THE PRODUCT**
 
 Three most significant works of mine are
 
@@ -90,7 +90,7 @@ Three most significant works of mine are
 > start commands in Render, securing environment variables and allowing
 > a 30-second timeout period for API calls.
 
-**[III. THINGS ACTUALLY DONE]{.underline}**
+**III. THINGS ACTUALLY DONE**
 
 The following is a specific list of what I worked on throughout the
 project:
@@ -133,7 +133,7 @@ project:
     > immediately, generated a replacement, added .env to .gitignore,
     > and cleaned Git history.
 
-**[IV. FILES, FEATURES, AND LOGIC CONTRIBUTED]{.underline}**
+**IV. FILES, FEATURES, AND LOGIC CONTRIBUTED**
 
   ------------------------------------------------------------------------------
   **File / Feature**  **Path**                **What it does**
@@ -159,7 +159,7 @@ project:
                                               advisory response
   ------------------------------------------------------------------------------
 
-**[V. EVIDENCE OF CONTRIBUTION]{.underline}**
+**V. EVIDENCE OF CONTRIBUTION**
 
 > My contributions are directly shown in these files:
 
@@ -216,7 +216,7 @@ project:
     > ensuring the backend installs correctly and runs on the cloud
     > platform.
 
-**[VI. HOW THIS CONNECTS TO THE FINAL PRODUCT]{.underline}**
+**VI. HOW THIS CONNECTS TO THE FINAL PRODUCT**
 
 The backend is the layer everything else depends on. Without the API
 server, the frontend has nothing to call. Without the scoring logic, the
@@ -256,7 +256,7 @@ The whole application, from the calculations, the bank comparisons to
 the artificial intelligence chatbot, operates entirely within the user's
 browser and live backend system.
 
-**[VII. WHAT I LEARNED]{.underline}**
+**VII. WHAT I LEARNED**
 
 This project provided several practical lessons in software development,
 API integration, and deployment.
@@ -325,7 +325,7 @@ added .env to .gitignore, and used git filter - branch to remove the
 commit from history. It was fixable, but it took time and was entirely
 avoidable.
 
-**[IX. MESSAGE FOR FUTURE STUDENTS]{.underline}**
+**IX. MESSAGE FOR FUTURE STUDENTS**
 
 If you\'re continuing this project or building something similar, a few
 things that would have saved me time:
