@@ -71,8 +71,8 @@ SME owners and finance staff at small and medium-sized enterprises. Household bu
 + Step 2: Build Command: npm run build
 + Step 3: Start Command: npm start
 + Step 4: Set Environment Variables:
-- DEEPSEEK_API_KEY: (your keys)
-- PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
-- PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
-- Auto-Deploy: On Commit
--> Then Deploy services 
++ DEEPSEEK_API_KEY: (your keys)
++ PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
++ PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
++ Auto-Deploy: On Commit
++ Then Deploy services 
