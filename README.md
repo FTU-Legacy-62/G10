@@ -52,7 +52,7 @@ SME owners and finance staff at small and medium-sized enterprises. Household bu
 - **PDF Report Export:** Automatically generates a comprehensive financial analysis report.
 
 ## Demo Link
-**Web:** *https://financial-analyzer-ooel.onrender.com*
+**Web:** *https://g10-bjcd.onrender.com*
 
 ## Data Notes
 
@@ -66,3 +66,13 @@ SME owners and finance staff at small and medium-sized enterprises. Household bu
 - The product supports light/dark mode toggle and bilingual interface (Vietnamese – English).
 - Analysis results can be exported as a PDF report using the "Export PDF" button on the navigation bar.
 - The "Admin DB" tab is only visible when Dev mode is enabled (click the Dev button and enter the password `admin123`).
+- In order to deploy through render.com, need to follow these steps:
++ Step 1:choose web services and region Singapore
++ Step 2: Build Command: npm run build
++ Step 3: Start Command: npm start
++ Step 4: Set Environment Variables:
+DEEPSEEK_API_KEY: (your keys)
+PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+Auto-Deploy: On Commit
+Then Deploy services 
